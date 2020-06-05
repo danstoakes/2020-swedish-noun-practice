@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Swedish Noun Practice</string>
+
+    <string name="app_loading_header">Loading</string>
+
+    <string name="app_item_progress">Progress</string>
+    <string name="app_item_buttonContinue">Continue</string>
+
+    <string name="app_item_buttonPractise">Practise</string>
+
+    <string name="app_error_header">No internet connection</string>
+    <string name="app_error_message">Apps need an internet connection</string>
+    <string name="app_error_button">Retry</string>
+
+    <string name="app_close_header">End this lesson?</string>
+    <string name="app_close_message">You will lose any progress made</string>
+    <string name="app_close_button_yes">Yes</string>
+    <string name="app_close_button_no">No</string>
+
+    <string name="app_feedback_header">Correct answer: %s</string>
+    <string name="app_feedback_message">How did you find this question?</string>
+
+    <string name="app_result_credit">Developed by Damanda</string>
+</resources>
