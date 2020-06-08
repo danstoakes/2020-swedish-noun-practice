@@ -96,7 +96,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
                     activity.requestSound(null);
                     break;
                 case R.id.buttonSubmit :
-                    activity.updateManager(null, input.getText().toString());
+                    input.setEnabled(false);
+                    button.setVisibility(View.INVISIBLE);
+                    activity.updateManager(input.getText().toString());
                     break;
             }
         }
@@ -118,9 +120,10 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             play.setOnClickListener(this);
 
             input.setText("");
+            input.requestFocus();
             input.setImeOptions(EditorInfo.IME_ACTION_DONE);
-            input.setRawInputType(InputType.TYPE_CLASS_TEXT);
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
             input.addTextChangedListener(new TextWatcher()
             {
                 @Override
@@ -136,6 +139,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
                 }
             });
 
+            button.setVisibility(View.VISIBLE);
             button.setOnClickListener(this);
 
             if (activity.getQuestionNumber() == 0)
