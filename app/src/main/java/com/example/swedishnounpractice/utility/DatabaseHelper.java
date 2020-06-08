@@ -84,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     public List<DatabaseObject> getList (DatabaseObject object)
     {
-        List<DatabaseObject> toReturn = new ArrayList<DatabaseObject> ();
+        List<DatabaseObject> toReturn = new ArrayList<> ();
 
         String query = object.getSelectString();
 

@@ -21,4 +21,8 @@
     <string name="app_feedback_message">How did you find this question?</string>
 
     <string name="app_result_credit">Developed by Damanda</string>
+
+    <string name="app_answer_correct">Correct</string>
+    <string name="app_answer_correct_spelling">Check your spelling of %s</string>
+    <string name="app_answer_incorrect">Incorrect</string>
 </resources>

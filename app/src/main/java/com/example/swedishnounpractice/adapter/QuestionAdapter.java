@@ -1,19 +1,29 @@
 package com.example.swedishnounpractice.adapter;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swedishnounpractice.R;
+import com.example.swedishnounpractice.activity.QuestionActivity;
 import com.example.swedishnounpractice.object.Question;
 import com.example.swedishnounpractice.utility.ScrollingLayoutManager;
+import com.example.swedishnounpractice.utility.ScrollingRecyclerView;
 
 import java.util.List;
 
@@ -21,9 +31,13 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
 {
     private Context context;
 
-    private RecyclerView recyclerView;
+    private ScrollingRecyclerView recyclerView;
+
+    private ScrollingLayoutManager manager;
 
     private List<Question> questions;
+
+    public int holderPosition;
 
     public QuestionAdapter (Context context, List<Question> questions)
     {
@@ -49,7 +63,8 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView)
     {
-        this.recyclerView = recyclerView;
+        this.recyclerView = (ScrollingRecyclerView) recyclerView;
+        manager = (ScrollingLayoutManager) recyclerView.getLayoutManager();
     }
 
     @Override
@@ -58,10 +73,41 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         return questions.size();
     }
 
-    class QuestionHolder extends RecyclerView.ViewHolder
+    public void setAdapterPosition (int holderPosition)
     {
+        this.holderPosition = holderPosition;
+    }
+
+    public int getAdapterPosition ()
+    {
+        return holderPosition;
+    }
+
+    public void nextQuestion (Question question)
+    {
+        manager.setHorizontalScrollEnabled(true);
+        manager.setHorizontalScrollPosition (getAdapterPosition());
+
+        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+
+        int index = questions.indexOf(question);
+
+        recyclerView.setQuestion (questions.get(index));
+        recyclerView.smoothScrollBy(metrics.widthPixels, 0);
+    }
+
+    class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    {
+        private Question question;
+
+        private ProgressBar bar;
+
         private TextView header;
         private TextView word;
+
+        private ImageButton play;
+
+        private EditText input;
 
         private Button button;
 
@@ -69,14 +115,40 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         {
             super(itemView);
 
+            bar = itemView.findViewById(R.id.barProgress);
+
             header = itemView.findViewById(R.id.textHeader);
             word = itemView.findViewById(R.id.textWord);
+
+            play = itemView.findViewById(R.id.imagePlay);
+
+            input = itemView.findViewById(R.id.textInput);
 
             button = itemView.findViewById(R.id.buttonSubmit);
         }
 
+        @Override
+        public void onClick(View v)
+        {
+            switch (v.getId())
+            {
+                case R.id.imagePlay :
+                    ((QuestionActivity) context).playSound(question, null);
+                    break;
+                case R.id.buttonSubmit :
+                    Log.i("HELP", "OH DEAR");
+                    ((QuestionActivity) context).addToManager(
+                            question, input.getText().toString(), bar.getProgress());
+                    break;
+            }
+        }
+
         private void setAttributes (final Question question)
         {
+            this.question = question;
+
+            bar.setProgress((int) ((float) getLayoutPosition () / getItemCount () * 100));
+
             String headerText = "Skriv svaret på engelska";
 
             if (question.isToSwedish())
@@ -85,50 +157,32 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             header.setText(headerText);
             word.setText(question.getQuestion());
 
-            button.setOnClickListener(new View.OnClickListener()
+            play.setOnClickListener(this);
+
+            input.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            input.setRawInputType(InputType.TYPE_CLASS_TEXT);
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+            input.addTextChangedListener(new TextWatcher()
             {
                 @Override
-                public void onClick(View v)
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+                @Override
+                public void afterTextChanged(Editable s)
                 {
-                    final ScrollingLayoutManager layoutManager = (ScrollingLayoutManager) recyclerView.getLayoutManager();
-                    layoutManager.setHorizontalScrollEnabled(true);
-
-                    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-                    final int width = displayMetrics.widthPixels;
-
-                    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
-                    {
-                        private int last;
-
-                        @Override
-                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState)
-                        {
-                            super.onScrollStateChanged(recyclerView, newState);
-
-                            if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                            {
-                                if ((width - last) == 0 || last == 0)
-                                {
-                                    last = 0;
-                                    layoutManager.setHorizontalScrollEnabled(false);
-                                } else
-                                {
-                                    recyclerView.smoothScrollBy(width - last, 0);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy)
-                        {
-                            super.onScrolled(recyclerView, dx, dy);
-
-                            last += dx;
-                        }
-                    });
-                    recyclerView.smoothScrollBy(width, 0);
+                    button.setEnabled(!s.toString().equals(""));
                 }
             });
+
+            button.setOnClickListener(this);
+
+            setAdapterPosition(getAdapterPosition());
+
+            if (getAdapterPosition() == 0 && manager.getHorizontalScrollPosition() == 0)
+                ((QuestionActivity) context).playSound(question, play);
         }
     }
 }
