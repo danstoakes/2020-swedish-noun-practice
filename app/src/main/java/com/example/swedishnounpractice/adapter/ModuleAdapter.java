@@ -78,11 +78,11 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHold
             difficulty.setText(module.getDifficulty());
 
             try
-            {
-                int id = R.drawable.class.getField(
+            { // reused a bit, so maybe a new class?
+                int imageID = R.drawable.class.getField(
                         "ic_aaaa1").getInt(null);
 
-                image.setImageResource(id);
+                image.setImageResource(imageID);
             } catch (IllegalAccessException | NoSuchFieldException e)
             {
                 e.printStackTrace();

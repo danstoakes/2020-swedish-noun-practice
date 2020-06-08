@@ -31,10 +31,13 @@ public class MainActivity extends AppCompatActivity
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Module> modules = new ArrayList<>();
-
-        ModuleAdapter adapter = new ModuleAdapter(this, modules);
+        ModuleAdapter adapter = new ModuleAdapter(this, setModules ());
         recyclerView.setAdapter(adapter);
+    }
+
+    public List<Module> setModules ()
+    {
+        List<Module> modules = new ArrayList<>();
 
         DatabaseHelper helper = new DatabaseHelper(this.getApplicationContext());
 
@@ -42,6 +45,6 @@ public class MainActivity extends AppCompatActivity
         for (DatabaseObject object : helper.getList(placeholder))
             modules.add(((Module) object));
 
-        adapter.notifyDataSetChanged();
+        return modules;
     }
 }

@@ -80,7 +80,8 @@ public class SnackbarFactory implements View.OnClickListener
     public void next ()
     {
         QuestionActivity activity = (QuestionActivity) getActivity();
-        activity.loadNextQuestion(activity.getQuestionManager().getCurrentQuestion());
+        activity.loadNextQuestion();
+        // activity.loadNextQuestion(activity.getQuestionManager().getCurrentQuestion());
     }
 
     public void show ()

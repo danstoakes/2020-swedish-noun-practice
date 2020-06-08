@@ -2,63 +2,48 @@ package com.example.swedishnounpractice.utility;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.view.View;
-import android.widget.ImageButton;
 
-public class SoundPlayer implements MediaPlayer.OnCompletionListener
+public class SoundPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener
 {
     private Context context;
 
-    private View view;
-
     private MediaPlayer player;
 
-    private boolean played;
+    private boolean playing;
 
     public SoundPlayer(Context context)
     {
         this.context = context;
 
         player = new MediaPlayer();
-
-        played = false;
     }
 
-    public SoundPlayer(Context context, View view)
+    public boolean isPlaying()
     {
-        this.context = context;
-        this.view = view;
-
-        player = new MediaPlayer();
+        return playing;
     }
 
-    public void setPlayed (boolean played)
+    @Override
+    public void onPrepared(MediaPlayer mp)
     {
-        this.played = played;
-    }
+        playing = true;
 
-    public void playSound (int soundID)
-    {
-        if (!played)
-        {
-            played = true;
-
-            player = MediaPlayer.create(context, soundID);
-            player.setOnCompletionListener(this);
-            player.start();
-        }
-
-        played = false;
+        mp.start ();
     }
 
     @Override
     public void onCompletion(MediaPlayer mp)
     {
-        if (view != null)
+        playing = false;
+    }
+
+    public void playSound (int soundID)
+    {
+        if (!playing)
         {
-            ImageButton button = (ImageButton) view; /* ((Activity) context).findViewById(R.id.button2); */
-            button.setEnabled(true);
+            player = MediaPlayer.create(context, soundID);
+            player.setOnPreparedListener(this);
+            player.setOnCompletionListener(this);
         }
-        player.release();
     }
 }

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.activity.QuestionActivity;
 import com.example.swedishnounpractice.object.Question;
-import com.example.swedishnounpractice.utility.ScrollingLayoutManager;
-import com.example.swedishnounpractice.utility.ScrollingRecyclerView;
 
 import java.util.List;
 
@@ -31,13 +27,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
 {
     private Context context;
 
-    private ScrollingRecyclerView recyclerView;
-
-    private ScrollingLayoutManager manager;
-
     private List<Question> questions;
-
-    public int holderPosition;
 
     public QuestionAdapter (Context context, List<Question> questions)
     {
@@ -61,45 +51,13 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     }
 
     @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView)
-    {
-        this.recyclerView = (ScrollingRecyclerView) recyclerView;
-        manager = (ScrollingLayoutManager) recyclerView.getLayoutManager();
-    }
-
-    @Override
     public int getItemCount()
     {
         return questions.size();
     }
 
-    public void setAdapterPosition (int holderPosition)
-    {
-        this.holderPosition = holderPosition;
-    }
-
-    public int getAdapterPosition ()
-    {
-        return holderPosition;
-    }
-
-    public void nextQuestion (Question question)
-    {
-        manager.setHorizontalScrollEnabled(true);
-        manager.setHorizontalScrollPosition (getAdapterPosition());
-
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-
-        int index = questions.indexOf(question);
-
-        recyclerView.setQuestion (questions.get(index));
-        recyclerView.smoothScrollBy(metrics.widthPixels, 0);
-    }
-
     class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        private Question question;
-
         private ProgressBar bar;
 
         private TextView header;
@@ -113,7 +71,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
 
         public QuestionHolder(@NonNull final View itemView)
         {
-            super(itemView);
+            super (itemView);
 
             bar = itemView.findViewById(R.id.barProgress);
 
@@ -130,24 +88,24 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         @Override
         public void onClick(View v)
         {
+            QuestionActivity activity = (QuestionActivity) context;
+
             switch (v.getId())
             {
                 case R.id.imagePlay :
-                    ((QuestionActivity) context).playSound(question, null);
+                    activity.requestSound(null);
                     break;
                 case R.id.buttonSubmit :
-                    Log.i("HELP", "OH DEAR");
-                    ((QuestionActivity) context).addToManager(
-                            question, input.getText().toString(), bar.getProgress());
+                    activity.updateManager(null, input.getText().toString());
                     break;
             }
         }
 
         private void setAttributes (final Question question)
         {
-            this.question = question;
+            QuestionActivity activity = (QuestionActivity) context;
 
-            bar.setProgress((int) ((float) getLayoutPosition () / getItemCount () * 100));
+            bar.setProgress((int) ((float) activity.getQuestionNumber() / getItemCount () * 100));
 
             String headerText = "Skriv svaret på engelska";
 
@@ -159,6 +117,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
 
             play.setOnClickListener(this);
 
+            input.setText("");
             input.setImeOptions(EditorInfo.IME_ACTION_DONE);
             input.setRawInputType(InputType.TYPE_CLASS_TEXT);
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
@@ -179,10 +138,8 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
 
             button.setOnClickListener(this);
 
-            setAdapterPosition(getAdapterPosition());
-
-            if (getAdapterPosition() == 0 && manager.getHorizontalScrollPosition() == 0)
-                ((QuestionActivity) context).playSound(question, play);
+            if (activity.getQuestionNumber() == 0)
+                activity.requestSound(null);
         }
     }
 }

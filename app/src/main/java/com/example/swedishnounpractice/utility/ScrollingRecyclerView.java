@@ -66,9 +66,7 @@ public class ScrollingRecyclerView extends RecyclerView
                 last = 0;
                 manager.setHorizontalScrollEnabled(false);
 
-                QuestionActivity activity = ((QuestionActivity) getContext());
-
-                ((QuestionActivity) getContext()).playSound(question, null);
+                ((QuestionActivity) getContext()).requestSound(null);
             } else
             {
                 smoothScrollBy(metrics.widthPixels - last, 0);

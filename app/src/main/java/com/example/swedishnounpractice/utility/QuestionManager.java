@@ -20,6 +20,16 @@ public class QuestionManager
         pointer = 0;
     }
 
+    public int getPointerLocation ()
+    {
+        return pointer;
+    }
+
+    public void loadNextQuestion ()
+    {
+        pointer++;
+    }
+
     public Question getCurrentQuestion ()
     {
         return questions.get(pointer);
