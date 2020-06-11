@@ -18,18 +18,15 @@ public class ScrollingRecyclerView extends RecyclerView
 
     private ScrollingLayoutManager manager;
 
-    private Question question;
+    private PermissionHelper helper;
 
     public ScrollingRecyclerView(Context context, AttributeSet attributeSet)
     {
         super(context, attributeSet);
 
         metrics = context.getResources().getDisplayMetrics();
-    }
 
-    public void setQuestion (Question question)
-    {
-        this.question = question;
+        helper = new PermissionHelper(context);
     }
 
     @Override
@@ -66,7 +63,8 @@ public class ScrollingRecyclerView extends RecyclerView
                 last = 0;
                 manager.setHorizontalScrollEnabled(false);
 
-                ((QuestionActivity) getContext()).requestSound(null);
+                if (helper.getWordSoundsOn())
+                    ((QuestionActivity) getContext()).requestSound(true, null);
             } else
             {
                 smoothScrollBy(metrics.widthPixels - last, 0);

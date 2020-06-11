@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.swedishnounpractice.R;
+import com.example.swedishnounpractice.utility.FlagHelper;
 
 public class ResultActivity extends AppCompatActivity
 {
@@ -13,5 +14,7 @@ public class ResultActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        FlagHelper.setFlags(this);
     }
 }

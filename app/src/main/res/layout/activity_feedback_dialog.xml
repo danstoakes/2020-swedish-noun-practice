@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        app:cardBackgroundColor="@color/cardview_light_background"
         app:cardCornerRadius="15dp"
         app:cardElevation="6dp"
         app:cardPreventCornerOverlap="true"
@@ -40,7 +39,6 @@
                 android:gravity="center_horizontal"
                 android:paddingBottom="24dp"
                 android:text="@string/app_feedback_header"
-                android:textColor="@android:color/tertiary_text_light"
                 android:textSize="24sp"
                 tools:layout_editor_absoluteX="32dp"
                 tools:layout_editor_absoluteY="32dp" />
@@ -51,7 +49,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
                 android:text="@string/app_feedback_message"
-                android:textColor="@android:color/tertiary_text_light"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="32dp"
                 tools:layout_editor_absoluteY="32dp" />
@@ -65,22 +62,28 @@
                 <ImageButton
                     android:id="@+id/buttonSad"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
                     android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
                     app:srcCompat="@drawable/ic_baseline_sentiment_very_dissatisfied_32" />
 
                 <ImageButton
                     android:id="@+id/buttonNeutral"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
                     android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
                     app:srcCompat="@drawable/ic_baseline_sentiment_okay_32" />
 
                 <ImageButton
                     android:id="@+id/buttonHappy"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
                     android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
                     app:srcCompat="@drawable/ic_baseline_sentiment_satisfied_alt_32" />
             </LinearLayout>
 

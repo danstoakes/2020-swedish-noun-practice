@@ -1,21 +1,29 @@
 package com.example.swedishnounpractice.activity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.DisplayMetrics;
 
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.adapter.QuestionAdapter;
 import com.example.swedishnounpractice.object.CloseDialog;
 import com.example.swedishnounpractice.object.DatabaseObject;
+import com.example.swedishnounpractice.object.ErrorDialog;
 import com.example.swedishnounpractice.object.Noun;
 import com.example.swedishnounpractice.object.Question;
 import com.example.swedishnounpractice.object.SnackbarFactory;
 import com.example.swedishnounpractice.utility.DatabaseHelper;
+import com.example.swedishnounpractice.utility.FlagHelper;
+import com.example.swedishnounpractice.utility.PermissionHelper;
 import com.example.swedishnounpractice.utility.QuestionManager;
 import com.example.swedishnounpractice.utility.ScrollingLayoutManager;
 import com.example.swedishnounpractice.utility.ScrollingRecyclerView;
@@ -32,11 +40,19 @@ public class QuestionActivity extends AppCompatActivity
 
     private SoundPlayer player;
 
+    private PermissionHelper helper;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme_NoBar);
         setContentView(R.layout.activity_question);
+
+        if (savedInstanceState != null)
+            manager = savedInstanceState.getParcelable("questionManager");
+
+        FlagHelper.setFlags(this);
 
         initialise();
     }
@@ -45,18 +61,28 @@ public class QuestionActivity extends AppCompatActivity
     {
         if (getIntent().getIntExtra("moduleID", 0) == 0)
         {
-            // throw error page. can make use of the old no connection error page
+            ErrorDialog dialog = new ErrorDialog(QuestionActivity.this);
+            dialog.show ();
         } else
         {
             player = new SoundPlayer(this);
 
-            int moduleID = getIntent().getIntExtra("moduleID", 0);
+            helper = new PermissionHelper(this);
 
             RecyclerView recyclerView = findViewById(R.id.recyclerView);
             recyclerView.setLayoutManager(new ScrollingLayoutManager(
                     this, LinearLayoutManager.HORIZONTAL, false, false));
 
-            QuestionAdapter adapter = new QuestionAdapter(this, setQuestions (moduleID));
+            QuestionAdapter adapter;
+            if (manager == null)
+            {
+                int moduleID = getIntent().getIntExtra("moduleID", 0);
+
+                adapter = new QuestionAdapter(this, setQuestions (moduleID));
+            } else
+            {
+                adapter = new QuestionAdapter(this, manager.getQuestions());
+            }
             recyclerView.setAdapter(adapter);
         }
     }
@@ -66,6 +92,20 @@ public class QuestionActivity extends AppCompatActivity
     {
         CloseDialog dialog = new CloseDialog(QuestionActivity.this);
         dialog.show ();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable("questionManager", manager);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     public List<Question> setQuestions (int moduleID)
@@ -78,17 +118,24 @@ public class QuestionActivity extends AppCompatActivity
                 0, moduleID, null, null, null, null);
 
         List<DatabaseObject> nounObjects = helper.getList(placeholder);
-        for (int i = 0; i < nounObjects.size(); i++)
+
+        if (nounObjects.size() == 0)
         {
-            Noun noun = ((Noun) nounObjects.get(i));
+            ErrorDialog dialog = new ErrorDialog(QuestionActivity.this);
+            dialog.show ();
+        } else
+        {
+            for (int i = 0; i < nounObjects.size(); i++)
+            {
+                Noun noun = ((Noun) nounObjects.get(i));
 
-            questions.add(new Question(noun, noun.getEnglish(), noun.getSwedish(), true));
-            questions.add(new Question(noun, noun.getSwedish(), noun.getEnglish(), false));
+                questions.add(new Question(noun, noun.getEnglish(), noun.getSwedish(), true));
+                questions.add(new Question(noun, noun.getSwedish(), noun.getEnglish(), false));
+            }
+            Collections.shuffle(questions);
+
+            manager = new QuestionManager (questions);
         }
-        Collections.shuffle(questions);
-
-        manager = new QuestionManager (questions);
-
         return questions;
     }
 
@@ -112,10 +159,20 @@ public class QuestionActivity extends AppCompatActivity
                 output = getString(R.string.app_answer_correct_spelling, question.getAnswer());
 
             factory.make(output, Snackbar.LENGTH_SHORT, R.color.correctAnswer, false);
+
+            if (helper.getCorrectSoundsOn())
+                requestSound(false, "correct");
+
+            requestVibrate(150);
         } else
         {
             factory.make(output, Snackbar.LENGTH_SHORT, R.color.incorrectAnswer, true);
             factory.setHeader(question.getAnswer ());
+
+            if (helper.getErrorSoundsOn())
+                requestSound(false, "incorrect");
+
+            requestVibrate(250);
         }
         factory.show();
     }
@@ -138,13 +195,12 @@ public class QuestionActivity extends AppCompatActivity
 
     public int getQuestionNumber ()
     {
-        return manager.getPointerLocation();
+        return manager.getPointerLocation() + 1;
     }
 
-    public void requestSound (@Nullable Question question)
+    public void requestSound (boolean wordSound, String soundName)
     {
-        if (question == null)
-            question = manager.getCurrentQuestion();
+        Question question = manager.getCurrentQuestion();
 
         if (!player.isPlaying())
         {
@@ -153,10 +209,30 @@ public class QuestionActivity extends AppCompatActivity
                 int soundID = R.raw.class.getField(
                         question.getNoun().getReferenceID()).getInt(null);
 
+                if (!wordSound)
+                    soundID = R.raw.class.getField(soundName).getInt(null);
+
                 player.playSound(soundID);
             } catch (IllegalAccessException | NoSuchFieldException e)
             {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private void requestVibrate (int length)
+    {
+        if (helper.getVibrationsOn())
+        {
+            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                vibrator.vibrate(
+                        VibrationEffect.createOneShot(length, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else
+            {
+                vibrator.vibrate(length);
             }
         }
     }

@@ -1,0 +1,93 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- <PreferenceCategory app:title="@string/messages_header">
+
+        <EditTextPreference
+            app:key="signature"
+            app:title="@string/signature_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="reply"
+            app:entries="@array/reply_entries"
+            app:entryValues="@array/reply_values"
+            app:key="reply"
+            app:title="@string/reply_title"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/sync_header">
+
+        <SwitchPreferenceCompat
+            app:key="sync"
+            app:title="@string/sync_title" />
+
+        <SwitchPreferenceCompat
+            app:dependency="sync"
+            app:key="attachment"
+            app:summaryOff="@string/attachment_summary_off"
+            app:summaryOn="@string/attachment_summary_on"
+            app:title="@string/attachment_title" />
+
+    </PreferenceCategory> -->
+
+    <PreferenceCategory
+        app:title="Preferences"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="preference_hint"
+            app:title="Show hints"
+            app:defaultValue="false"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="preference_vibrate"
+            app:title="Vibrations"
+            app:defaultValue="false"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Sounds"
+        app:iconSpaceReserved="false" >
+
+        <SwitchPreferenceCompat
+            app:key="@string/sounds_key"
+            app:title="App sounds"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="@string/word_sounds_key"
+            app:title="Spoken word"
+            app:defaultValue="true"
+            app:dependency="@string/sounds_key"
+            app:iconSpaceReserved="false"
+            app:summaryOff="Block saying the word for each question"
+            app:summaryOn="Always say the word for each question" />
+
+        <SwitchPreferenceCompat
+            app:key="@string/correct_sounds_key"
+            app:title="Correct answer"
+            app:defaultValue="true"
+            app:dependency="@string/sounds_key"
+            app:iconSpaceReserved="false"
+            app:summaryOff="Block playing the question complete chime"
+            app:summaryOn="Always play the question complete chime" />
+
+        <SwitchPreferenceCompat
+            app:key="@string/error_sounds_key"
+            app:title="Incorrect answer"
+            app:defaultValue="true"
+            app:dependency="@string/sounds_key"
+            app:iconSpaceReserved="false"
+            app:summaryOff="Block playing the question complete chime"
+            app:summaryOn="Always play the question complete chime" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

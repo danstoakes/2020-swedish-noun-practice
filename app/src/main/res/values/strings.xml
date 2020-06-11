@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Swedish Noun Practice</string>
+    <string name="app_name">Learn Swedish</string>
+
+    <string name="main_header">Modules</string>
 
     <string name="app_loading_header">Loading</string>
 
@@ -8,9 +10,9 @@
 
     <string name="app_item_buttonPractise">Practise</string>
 
-    <string name="app_error_header">No internet connection</string>
-    <string name="app_error_message">Apps need an internet connection</string>
-    <string name="app_error_button">Retry</string>
+    <string name="app_error_header">Oops!</string>
+    <string name="app_error_message">It looks like something went wrong</string>
+    <string name="app_error_button">Home</string>
 
     <string name="app_close_header">End this lesson?</string>
     <string name="app_close_message">You will lose any progress made</string>
@@ -25,4 +27,30 @@
     <string name="app_answer_correct">Correct</string>
     <string name="app_answer_correct_spelling">Check your spelling of %s</string>
     <string name="app_answer_incorrect">Incorrect</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="hint_key">preference_hint</string>
+    <string name="vibration_key">preference_vibrate</string>
+
+    <string name="sounds_key">preference_sound</string>
+    <string name="word_sounds_key">preference_word</string>
+    <string name="correct_sounds_key">preference_correct</string>
+    <string name="error_sounds_key">preference_error</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>

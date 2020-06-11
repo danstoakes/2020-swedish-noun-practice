@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.activity.QuestionActivity;
 import com.example.swedishnounpractice.object.Question;
+import com.example.swedishnounpractice.utility.PermissionHelper;
 
 import java.util.List;
 
@@ -29,10 +32,13 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
 
     private List<Question> questions;
 
+    private PermissionHelper helper;
+
     public QuestionAdapter (Context context, List<Question> questions)
     {
         this.context = context;
         this.questions = questions;
+        this.helper = new PermissionHelper(context);
     }
 
     @NonNull
@@ -93,10 +99,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             switch (v.getId())
             {
                 case R.id.imagePlay :
-                    activity.requestSound(null);
+                    activity.requestSound(true, null);
                     break;
                 case R.id.buttonSubmit :
-                    input.setEnabled(false);
                     button.setVisibility(View.INVISIBLE);
                     activity.updateManager(input.getText().toString());
                     break;
@@ -122,6 +127,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             input.setText("");
             input.requestFocus();
             input.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            input.setRawInputType(InputType.TYPE_CLASS_TEXT);
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
             input.addTextChangedListener(new TextWatcher()
@@ -135,15 +141,16 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
                 @Override
                 public void afterTextChanged(Editable s)
                 {
-                    button.setEnabled(!s.toString().equals(""));
+                    button.setEnabled(!s.toString().trim().equals(""));
                 }
             });
 
+            button.setEnabled(false);
             button.setVisibility(View.VISIBLE);
             button.setOnClickListener(this);
 
-            if (activity.getQuestionNumber() == 0)
-                activity.requestSound(null);
+            if (activity.getQuestionNumber() == 1 && helper.getWordSoundsOn())
+                activity.requestSound(true, null);
         }
     }
 }

@@ -80,7 +80,7 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHold
             try
             { // reused a bit, so maybe a new class?
                 int imageID = R.drawable.class.getField(
-                        "ic_aaaa1").getInt(null);
+                        "ic_" + module.getReferenceID()).getInt(null);
 
                 image.setImageResource(imageID);
             } catch (IllegalAccessException | NoSuchFieldException e)
