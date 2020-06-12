@@ -2,6 +2,7 @@ package com.example.swedishnounpractice.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.activity.QuestionActivity;
+import com.example.swedishnounpractice.helper.DrawableHelper;
 import com.example.swedishnounpractice.object.Module;
 
 import java.util.List;
@@ -77,16 +79,8 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHold
             name.setText(module.getName());
             difficulty.setText(module.getDifficulty());
 
-            try
-            { // reused a bit, so maybe a new class?
-                int imageID = R.drawable.class.getField(
-                        "ic_" + module.getReferenceID()).getInt(null);
-
-                image.setImageResource(imageID);
-            } catch (IllegalAccessException | NoSuchFieldException e)
-            {
-                e.printStackTrace();
-            }
+            image.setImageResource(
+                    DrawableHelper.getResource("ic_" + module.getReferenceID(), true));
 
             button.setOnClickListener(new View.OnClickListener()
             {

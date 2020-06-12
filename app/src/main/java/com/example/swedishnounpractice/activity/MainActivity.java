@@ -2,31 +2,23 @@ package com.example.swedishnounpractice.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.adapter.ModuleAdapter;
 import com.example.swedishnounpractice.object.DatabaseObject;
 import com.example.swedishnounpractice.object.Module;
 import com.example.swedishnounpractice.utility.DatabaseHelper;
-import com.example.swedishnounpractice.utility.FlagHelper;
+import com.example.swedishnounpractice.helper.FlagHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -35,6 +27,8 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setTitle(R.string.main_header);
 
         FlagHelper.setFlags(this);
 

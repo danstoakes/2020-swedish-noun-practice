@@ -4,11 +4,11 @@ import android.content.ContentValues;
 
 public interface DatabaseObject
 {
-    public String getTableName ();
+    String getTableName();
 
-    public String getSelectString ();
-    public String getUpdateString ();
+    String getSelectString();
+    String getUpdateString();
 
-    public ContentValues getUpdateValues ();
-    public String[] getUpdateParameters ();
+    ContentValues getUpdateValues();
+    String[] getUpdateParameters();
 }

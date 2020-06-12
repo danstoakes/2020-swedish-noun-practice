@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.activity.QuestionActivity;
 import com.example.swedishnounpractice.object.Question;
-import com.example.swedishnounpractice.utility.PermissionHelper;
+import com.example.swedishnounpractice.helper.PreferenceHelper;
 
 import java.util.List;
 
@@ -32,13 +30,10 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
 
     private List<Question> questions;
 
-    private PermissionHelper helper;
-
     public QuestionAdapter (Context context, List<Question> questions)
     {
         this.context = context;
         this.questions = questions;
-        this.helper = new PermissionHelper(context);
     }
 
     @NonNull
@@ -149,7 +144,8 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             button.setVisibility(View.VISIBLE);
             button.setOnClickListener(this);
 
-            if (activity.getQuestionNumber() == 1 && helper.getWordSoundsOn())
+            if (activity.getQuestionNumber() == 1 &&
+                    PreferenceHelper.getSoundPreference(context, R.string.word_sounds_key, true))
                 activity.requestSound(true, null);
         }
     }

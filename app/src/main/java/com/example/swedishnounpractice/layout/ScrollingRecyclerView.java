@@ -1,4 +1,4 @@
-package com.example.swedishnounpractice.utility;
+package com.example.swedishnounpractice.layout;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,8 +7,9 @@ import android.util.DisplayMetrics;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.activity.QuestionActivity;
-import com.example.swedishnounpractice.object.Question;
+import com.example.swedishnounpractice.helper.PreferenceHelper;
 
 public class ScrollingRecyclerView extends RecyclerView
 {
@@ -18,15 +19,11 @@ public class ScrollingRecyclerView extends RecyclerView
 
     private ScrollingLayoutManager manager;
 
-    private PermissionHelper helper;
-
     public ScrollingRecyclerView(Context context, AttributeSet attributeSet)
     {
         super(context, attributeSet);
 
         metrics = context.getResources().getDisplayMetrics();
-
-        helper = new PermissionHelper(context);
     }
 
     @Override
@@ -63,7 +60,8 @@ public class ScrollingRecyclerView extends RecyclerView
                 last = 0;
                 manager.setHorizontalScrollEnabled(false);
 
-                if (helper.getWordSoundsOn())
+                /* POTENTIALLY DODGY. RECOMMEND MOVING AT SOME POINT */
+                if (PreferenceHelper.getSoundPreference(getContext(), R.string.word_sounds_key, true))
                     ((QuestionActivity) getContext()).requestSound(true, null);
             } else
             {

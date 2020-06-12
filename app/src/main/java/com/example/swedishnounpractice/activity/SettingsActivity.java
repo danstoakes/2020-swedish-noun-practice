@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.swedishnounpractice.R;
-import com.example.swedishnounpractice.utility.FlagHelper;
-import com.example.swedishnounpractice.utility.PermissionHelper;
+import com.example.swedishnounpractice.helper.FlagHelper;
+import com.example.swedishnounpractice.helper.VibrationHelper;
 
 public class SettingsActivity extends AppCompatActivity
 {
@@ -58,7 +58,13 @@ public class SettingsActivity extends AppCompatActivity
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
         {
+            String vibrateKey = getString(R.string.vibration_key);
 
+            if (key.equals(vibrateKey))
+            {
+                if (sharedPreferences.getBoolean(key, false))
+                    VibrationHelper.vibrate(getActivity(), false, null);
+            }
         }
 
         @Override

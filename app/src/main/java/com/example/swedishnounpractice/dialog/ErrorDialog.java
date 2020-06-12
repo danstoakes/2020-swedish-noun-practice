@@ -1,4 +1,4 @@
-package com.example.swedishnounpractice.object;
+package com.example.swedishnounpractice.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;

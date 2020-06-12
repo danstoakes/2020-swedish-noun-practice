@@ -1,4 +1,4 @@
-package com.example.swedishnounpractice.object;
+package com.example.swedishnounpractice.dialog;
 
 import android.app.Activity;
 import android.content.Context;
@@ -71,6 +71,7 @@ public class SnackbarFactory implements View.OnClickListener
             {
                 super.onDismissed(transientBottomBar, event);
 
+                /* POTENTIALLY DODGY. RECOMMEND MOVING AT SOME POINT */
                 if (!halted)
                     next ();
             }

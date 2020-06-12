@@ -6,28 +6,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.DisplayMetrics;
 
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.adapter.QuestionAdapter;
-import com.example.swedishnounpractice.object.CloseDialog;
+import com.example.swedishnounpractice.dialog.CloseDialog;
+import com.example.swedishnounpractice.helper.DrawableHelper;
 import com.example.swedishnounpractice.object.DatabaseObject;
-import com.example.swedishnounpractice.object.ErrorDialog;
+import com.example.swedishnounpractice.dialog.ErrorDialog;
 import com.example.swedishnounpractice.object.Noun;
 import com.example.swedishnounpractice.object.Question;
-import com.example.swedishnounpractice.object.SnackbarFactory;
+import com.example.swedishnounpractice.dialog.SnackbarFactory;
 import com.example.swedishnounpractice.utility.DatabaseHelper;
-import com.example.swedishnounpractice.utility.FlagHelper;
-import com.example.swedishnounpractice.utility.PermissionHelper;
+import com.example.swedishnounpractice.helper.FlagHelper;
+import com.example.swedishnounpractice.helper.PreferenceHelper;
 import com.example.swedishnounpractice.utility.QuestionManager;
-import com.example.swedishnounpractice.utility.ScrollingLayoutManager;
-import com.example.swedishnounpractice.utility.ScrollingRecyclerView;
+import com.example.swedishnounpractice.layout.ScrollingLayoutManager;
+import com.example.swedishnounpractice.layout.ScrollingRecyclerView;
 import com.example.swedishnounpractice.utility.SoundPlayer;
+import com.example.swedishnounpractice.helper.VibrationHelper;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -39,8 +37,6 @@ public class QuestionActivity extends AppCompatActivity
     private QuestionManager manager;
 
     private SoundPlayer player;
-
-    private PermissionHelper helper;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
@@ -66,8 +62,6 @@ public class QuestionActivity extends AppCompatActivity
         } else
         {
             player = new SoundPlayer(this);
-
-            helper = new PermissionHelper(this);
 
             RecyclerView recyclerView = findViewById(R.id.recyclerView);
             recyclerView.setLayoutManager(new ScrollingLayoutManager(
@@ -160,19 +154,19 @@ public class QuestionActivity extends AppCompatActivity
 
             factory.make(output, Snackbar.LENGTH_SHORT, R.color.correctAnswer, false);
 
-            if (helper.getCorrectSoundsOn())
+            if (PreferenceHelper.getSoundPreference(this, R.string.correct_sounds_key, true))
                 requestSound(false, "correct");
 
-            requestVibrate(150);
+            VibrationHelper.vibrate(this, true, "correct");
         } else
         {
             factory.make(output, Snackbar.LENGTH_SHORT, R.color.incorrectAnswer, true);
             factory.setHeader(question.getAnswer ());
 
-            if (helper.getErrorSoundsOn())
+            if (PreferenceHelper.getSoundPreference(this, R.string.error_sounds_key, true))
                 requestSound(false, "incorrect");
 
-            requestVibrate(250);
+            VibrationHelper.vibrate(this, true, "incorrect");
         }
         factory.show();
     }
@@ -202,38 +196,11 @@ public class QuestionActivity extends AppCompatActivity
     {
         Question question = manager.getCurrentQuestion();
 
-        if (!player.isPlaying())
-        {
-            try
-            {
-                int soundID = R.raw.class.getField(
-                        question.getNoun().getReferenceID()).getInt(null);
+        int soundID = DrawableHelper.getResource(question.getNoun().getReferenceID(), false);
 
-                if (!wordSound)
-                    soundID = R.raw.class.getField(soundName).getInt(null);
+        if (!wordSound)
+            soundID = DrawableHelper.getResource(soundName, false);
 
-                player.playSound(soundID);
-            } catch (IllegalAccessException | NoSuchFieldException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void requestVibrate (int length)
-    {
-        if (helper.getVibrationsOn())
-        {
-            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            {
-                vibrator.vibrate(
-                        VibrationEffect.createOneShot(length, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else
-            {
-                vibrator.vibrate(length);
-            }
-        }
+        player.playSound(soundID);
     }
 }

@@ -10,6 +10,13 @@ import java.util.List;
 
 public class QuestionManager implements Parcelable
 {
+    /*
+     * Needs refining at a later date.
+     *
+     * Consider re-ordering methods and changing access levels. Also change the parcelable
+     * methods to be more in line with style.
+     */
+
     private List<Question> questions;
     private List<Question> incorrect;
 
@@ -38,40 +45,20 @@ public class QuestionManager implements Parcelable
         return questions.get(pointer);
     }
 
-    public Question getNextQuestion ()
-    {
-        return questions.get(++pointer);
-    }
-
-    public void addIncorrect (Question question)
-    {
-        incorrect.add(question);
-    }
-
     public List<Question> getQuestions ()
     {
         return questions;
     }
 
-    public int getQuestionSize ()
-    {
-        return questions.size();
-    }
-
-    public int getCorrect ()
-    {
-        return questions.size() - incorrect.size();
-    }
-
     protected QuestionManager(Parcel in) {
         if (in.readByte() == 0x01) {
-            questions = new ArrayList<Question>();
+            questions = new ArrayList<>();
             in.readList(questions, Question.class.getClassLoader());
         } else {
             questions = null;
         }
         if (in.readByte() == 0x01) {
-            incorrect = new ArrayList<Question>();
+            incorrect = new ArrayList<>();
             in.readList(incorrect, Question.class.getClassLoader());
         } else {
             incorrect = null;
@@ -101,7 +88,6 @@ public class QuestionManager implements Parcelable
         dest.writeInt(pointer);
     }
 
-    @SuppressWarnings("unused")
     public static final Parcelable.Creator<QuestionManager> CREATOR = new Parcelable.Creator<QuestionManager>() {
         @Override
         public QuestionManager createFromParcel(Parcel in) {

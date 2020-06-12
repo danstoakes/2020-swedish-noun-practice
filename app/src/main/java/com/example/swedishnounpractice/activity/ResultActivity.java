@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.swedishnounpractice.R;
-import com.example.swedishnounpractice.utility.FlagHelper;
+import com.example.swedishnounpractice.helper.FlagHelper;
 
 public class ResultActivity extends AppCompatActivity
 {

@@ -52,14 +52,14 @@ public class DatabaseHelper extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
 
-    public boolean databaseExists ()
+    private boolean databaseExists ()
     {
         File databaseFile = new File(databasePath);
 
         return databaseFile.exists();
     }
 
-    public void copyDatabase ()
+    private void copyDatabase ()
     {
         try
         {

@@ -1,7 +1,5 @@
 package com.example.swedishnounpractice.object;
 
-import android.os.Parcelable;
-
 public class Question
 {
     private Noun noun;
