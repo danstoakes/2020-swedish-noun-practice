@@ -52,14 +52,14 @@ public class DatabaseHelper extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
 
-    private boolean databaseExists ()
+    public boolean databaseExists ()
     {
         File databaseFile = new File(databasePath);
 
         return databaseFile.exists();
     }
 
-    private void copyDatabase ()
+    public void copyDatabase ()
     {
         try
         {
@@ -118,6 +118,22 @@ public class DatabaseHelper extends SQLiteOpenHelper
         database.close();
 
         return toReturn;
+    }
+
+    public double getModuleWeight (Module module)
+    {
+        String query = "SELECT AVG(Weight) AS Average FROM Noun WHERE ModuleID = ?";
+
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        Cursor cursor = database.rawQuery(query, new String [] {String.valueOf(module.getModuleID())});
+
+        if (cursor.moveToFirst())
+            return cursor.getDouble(0);
+
+        cursor.close();
+
+        return 0;
     }
 
     public boolean update (DatabaseObject object)

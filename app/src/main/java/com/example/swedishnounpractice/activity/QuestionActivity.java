@@ -6,15 +6,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.adapter.QuestionAdapter;
 import com.example.swedishnounpractice.dialog.CloseDialog;
+import com.example.swedishnounpractice.dialog.DialogOptionSelectedListener;
+import com.example.swedishnounpractice.dialog.FeedbackDialog;
+import com.example.swedishnounpractice.dialog.SnackbarOptionSelectedListener;
 import com.example.swedishnounpractice.helper.DrawableHelper;
+import com.example.swedishnounpractice.layout.ScrollCompletedListener;
 import com.example.swedishnounpractice.object.DatabaseObject;
 import com.example.swedishnounpractice.dialog.ErrorDialog;
+import com.example.swedishnounpractice.object.Module;
 import com.example.swedishnounpractice.object.Noun;
 import com.example.swedishnounpractice.object.Question;
 import com.example.swedishnounpractice.dialog.SnackbarFactory;
@@ -57,7 +63,7 @@ public class QuestionActivity extends AppCompatActivity
     {
         if (getIntent().getIntExtra("moduleID", 0) == 0)
         {
-            ErrorDialog dialog = new ErrorDialog(QuestionActivity.this);
+            ErrorDialog dialog = new ErrorDialog (QuestionActivity.this);
             dialog.show ();
         } else
         {
@@ -102,7 +108,7 @@ public class QuestionActivity extends AppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    public List<Question> setQuestions (int moduleID)
+    private List<Question> setQuestions (int moduleID)
     {
         List<Question> questions = new ArrayList<>();
 
@@ -135,14 +141,14 @@ public class QuestionActivity extends AppCompatActivity
 
     public void updateManager (String answer)
     {
-        Question question = manager.getCurrentQuestion();
+        final Question question = manager.getCurrentQuestion();
 
         String correctAnswer = question.getAnswer().toLowerCase();
         answer = answer.toLowerCase();
 
         int characterDifference = Math.abs(answer.length() - correctAnswer.length());
 
-        SnackbarFactory factory = new SnackbarFactory(this);
+        final SnackbarFactory factory = new SnackbarFactory(this);
 
         String output = getString(R.string.app_answer_incorrect);
         if (answer.contains(correctAnswer) && characterDifference <= 1)
@@ -158,6 +164,8 @@ public class QuestionActivity extends AppCompatActivity
                 requestSound(false, "correct");
 
             VibrationHelper.vibrate(this, true, "correct");
+
+            manager.setCorrectWeight();
         } else
         {
             factory.make(output, Snackbar.LENGTH_SHORT, R.color.incorrectAnswer, true);
@@ -167,8 +175,85 @@ public class QuestionActivity extends AppCompatActivity
                 requestSound(false, "incorrect");
 
             VibrationHelper.vibrate(this, true, "incorrect");
+
+            manager.setIncorrect(question);
+            manager.setIncorrectWeight(0.05);
         }
+        Snackbar snackbar = factory.getSnackbar();
+        snackbar.addCallback(new Snackbar.Callback()
+        {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event)
+            {
+                super.onDismissed(transientBottomBar, event);
+
+                handleQuestion(factory.getHalted());
+            }
+        });
+
+        final QuestionActivity currentActivity = this;
+
+        factory.setSnackbarOptionSelectedListener(new SnackbarOptionSelectedListener()
+        {
+            @Override
+            public void onSnackbarOptionSelected(String header)
+            {
+                FeedbackDialog dialog = new FeedbackDialog(currentActivity, factory);
+                dialog.setHeader(header);
+                dialog.setOnDialogOptionSelectedListener(new DialogOptionSelectedListener()
+                {
+                    @Override
+                    public void onDialogOptionSelected()
+                    {
+                        factory.setHalted(false);
+
+                        handleQuestion(factory.getHalted());
+                    }
+                });
+                dialog.show();
+            }
+        });
         factory.show();
+    }
+
+    private void handleQuestion (boolean dialogShowing)
+    {
+        if (!dialogShowing)
+        {
+            if (manager.getPointerLocation() == manager.getQuestionsSize() - 1)
+            {
+                DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
+
+                for (Question answered : manager.getQuestions())
+                    helper.update(answered.getNoun());
+
+                Module module = new Module(manager.getCurrentQuestion().getNoun().getModuleID());
+
+                double averageWeight = helper.getModuleWeight(module);
+
+                String difficulty = "Easy";
+                if (averageWeight > 0 && averageWeight < 0.2)
+                {
+                    difficulty = "Normal";
+                } else if (averageWeight > 0.2)
+                {
+                    difficulty = "Hard";
+                }
+
+                module.setDifficulty(difficulty);
+
+                helper.update(module);
+
+                Intent resultIntent = new Intent(QuestionActivity.this, ResultActivity.class)
+                        .putExtra("score", (manager.getQuestionsSize() - manager.getIncorrectSize()))
+                        .putExtra("total", manager.getQuestionsSize());
+
+                startActivity(resultIntent);
+            } else
+            {
+                loadNextQuestion();
+            }
+        }
     }
 
     public void loadNextQuestion ()
@@ -184,12 +269,26 @@ public class QuestionActivity extends AppCompatActivity
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
 
+        recyclerView.setScrollCompletedListener(new ScrollCompletedListener()
+        {
+            @Override
+            public void onScrollCompleted ()
+            {
+                if (PreferenceHelper.getSoundPreference(getApplicationContext(), R.string.word_sounds_key, true))
+                    requestSound(true, null);
+            }
+        });
         recyclerView.smoothScrollBy(metrics.widthPixels, 0);
     }
 
     public int getQuestionNumber ()
     {
         return manager.getPointerLocation() + 1;
+    }
+
+    public void setQuestionWeight (double weight)
+    {
+        manager.setIncorrectWeight(weight);
     }
 
     public void requestSound (boolean wordSound, String soundName)

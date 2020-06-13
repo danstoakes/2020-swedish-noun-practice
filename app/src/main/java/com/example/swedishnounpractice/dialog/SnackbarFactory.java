@@ -8,7 +8,6 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 
 import com.example.swedishnounpractice.R;
-import com.example.swedishnounpractice.activity.QuestionActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 public class SnackbarFactory implements View.OnClickListener
@@ -20,6 +19,8 @@ public class SnackbarFactory implements View.OnClickListener
     private String header;
 
     private boolean halted;
+
+    private SnackbarOptionSelectedListener listener;
 
     public SnackbarFactory (Context context)
     {
@@ -37,7 +38,7 @@ public class SnackbarFactory implements View.OnClickListener
     {
         this.halted = halted;
 
-        next();
+        // next();
     }
 
     public void setHeader (String header)
@@ -63,25 +64,16 @@ public class SnackbarFactory implements View.OnClickListener
             snackbar.setAction("MORE", this);
             snackbar.setActionTextColor(Color.WHITE);
         }
-
-        snackbar.addCallback(new Snackbar.Callback()
-        {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event)
-            {
-                super.onDismissed(transientBottomBar, event);
-
-                /* POTENTIALLY DODGY. RECOMMEND MOVING AT SOME POINT */
-                if (!halted)
-                    next ();
-            }
-        });
     }
 
-    public void next ()
+    public Snackbar getSnackbar ()
     {
-        QuestionActivity activity = (QuestionActivity) getActivity();
-        activity.loadNextQuestion();
+        return snackbar;
+    }
+
+    public boolean getHalted ()
+    {
+        return halted;
     }
 
     public void show ()
@@ -89,13 +81,16 @@ public class SnackbarFactory implements View.OnClickListener
         snackbar.show();
     }
 
+    public void setSnackbarOptionSelectedListener (SnackbarOptionSelectedListener listener)
+    {
+        this.listener = listener;
+    }
+
     @Override
     public void onClick (View v)
     {
         halted = true;
 
-        FeedbackDialog dialog = new FeedbackDialog(activity, this);
-        dialog.setHeader(header);
-        dialog.show();
+        listener.onSnackbarOptionSelected (header);
     }
 }

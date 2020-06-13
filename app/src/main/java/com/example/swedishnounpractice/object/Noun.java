@@ -1,9 +1,10 @@
 package com.example.swedishnounpractice.object;
 
 import android.content.ContentValues;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Noun implements DatabaseObject
-{
+public class Noun implements DatabaseObject, Parcelable {
     private static final String TABLE_NAME = "Noun";
 
     private int nounID;
@@ -23,6 +24,11 @@ public class Noun implements DatabaseObject
         this.english = english;
         this.swedish = swedish;
         this.weight = weight;
+    }
+
+    public void setWeight (double increment)
+    {
+        weight += increment;
     }
 
     public int getNounID ()
@@ -64,7 +70,7 @@ public class Noun implements DatabaseObject
     @Override
     public String getSelectString ()
     {
-        return "SELECT * FROM Noun WHERE ModuleID = ? ORDER BY Weight DESC LIMIT 10;";
+        return "SELECT * FROM Noun WHERE ModuleID = ? ORDER BY Weight DESC LIMIT 4;"; // 10
     }
 
     @Override
@@ -87,4 +93,46 @@ public class Noun implements DatabaseObject
     {
         return new String[] {String.valueOf(nounID)};
     }
+
+    protected Noun(Parcel in) {
+        nounID = in.readInt();
+        moduleID = in.readInt();
+        referenceID = in.readString();
+        english = in.readString();
+        swedish = in.readString();
+        weight = in.readByte() == 0x00 ? null : in.readDouble();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(nounID);
+        dest.writeInt(moduleID);
+        dest.writeString(referenceID);
+        dest.writeString(english);
+        dest.writeString(swedish);
+        if (weight == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeDouble(weight);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Noun> CREATOR = new Parcelable.Creator<Noun>() {
+        @Override
+        public Noun createFromParcel(Parcel in) {
+            return new Noun(in);
+        }
+
+        @Override
+        public Noun[] newArray(int size) {
+            return new Noun[size];
+        }
+    };
 }

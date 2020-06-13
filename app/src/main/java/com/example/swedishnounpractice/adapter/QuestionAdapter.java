@@ -1,15 +1,10 @@
 package com.example.swedishnounpractice.adapter;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.activity.QuestionActivity;
+import com.example.swedishnounpractice.layout.ResponsiveEditText;
+import com.example.swedishnounpractice.layout.ValidEntryListener;
 import com.example.swedishnounpractice.object.Question;
 import com.example.swedishnounpractice.helper.PreferenceHelper;
 
@@ -60,14 +57,10 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private ProgressBar bar;
-
         private TextView header;
         private TextView word;
-
         private ImageButton play;
-
-        private EditText input;
-
+        private ResponsiveEditText input;
         private Button button;
 
         public QuestionHolder(@NonNull final View itemView)
@@ -97,8 +90,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
                     activity.requestSound(true, null);
                     break;
                 case R.id.buttonSubmit :
+                    input.setEnabled(false);
                     button.setVisibility(View.INVISIBLE);
-                    activity.updateManager(input.getText().toString());
+                    activity.updateManager(input.getText().toString()); // use a callback/listener?
                     break;
             }
         }
@@ -110,7 +104,6 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             bar.setProgress((int) ((float) activity.getQuestionNumber() / getItemCount () * 100));
 
             String headerText = "Skriv svaret på engelska";
-
             if (question.isToSwedish())
                 headerText = "Write the answer in Swedish";
 
@@ -119,24 +112,13 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
 
             play.setOnClickListener(this);
 
-            input.setText("");
-            input.requestFocus();
-            input.setImeOptions(EditorInfo.IME_ACTION_DONE);
-            input.setRawInputType(InputType.TYPE_CLASS_TEXT);
-            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-
-            input.addTextChangedListener(new TextWatcher()
+            input.setProperties();
+            input.setValidEntryListener(new ValidEntryListener()
             {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) { }
-
-                @Override
-                public void afterTextChanged(Editable s)
+                public void onValidEntryAdded(boolean enabled)
                 {
-                    button.setEnabled(!s.toString().trim().equals(""));
+                    button.setEnabled(enabled);
                 }
             });
 

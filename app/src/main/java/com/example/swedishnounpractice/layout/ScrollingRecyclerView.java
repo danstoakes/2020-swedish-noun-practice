@@ -7,10 +7,6 @@ import android.util.DisplayMetrics;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.swedishnounpractice.R;
-import com.example.swedishnounpractice.activity.QuestionActivity;
-import com.example.swedishnounpractice.helper.PreferenceHelper;
-
 public class ScrollingRecyclerView extends RecyclerView
 {
     private int last;
@@ -19,11 +15,18 @@ public class ScrollingRecyclerView extends RecyclerView
 
     private ScrollingLayoutManager manager;
 
+    private ScrollCompletedListener listener;
+
     public ScrollingRecyclerView(Context context, AttributeSet attributeSet)
     {
         super(context, attributeSet);
 
         metrics = context.getResources().getDisplayMetrics();
+    }
+
+    public void setScrollCompletedListener (ScrollCompletedListener listener)
+    {
+        this.listener = listener;
     }
 
     @Override
@@ -60,9 +63,7 @@ public class ScrollingRecyclerView extends RecyclerView
                 last = 0;
                 manager.setHorizontalScrollEnabled(false);
 
-                /* POTENTIALLY DODGY. RECOMMEND MOVING AT SOME POINT */
-                if (PreferenceHelper.getSoundPreference(getContext(), R.string.word_sounds_key, true))
-                    ((QuestionActivity) getContext()).requestSound(true, null);
+                listener.onScrollCompleted();
             } else
             {
                 smoothScrollBy(metrics.widthPixels - last, 0);

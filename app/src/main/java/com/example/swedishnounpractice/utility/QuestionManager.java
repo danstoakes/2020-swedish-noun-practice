@@ -17,6 +17,8 @@ public class QuestionManager implements Parcelable
      * methods to be more in line with style.
      */
 
+    private static final double CORRECT_WEIGHT = -0.05;
+
     private List<Question> questions;
     private List<Question> incorrect;
 
@@ -28,6 +30,31 @@ public class QuestionManager implements Parcelable
         incorrect = new ArrayList<>();
 
         pointer = 0;
+    }
+
+    public void setCorrectWeight ()
+    {
+        getCurrentQuestion().getNoun().setWeight(CORRECT_WEIGHT);
+    }
+
+    public void setIncorrectWeight (double increment)
+    {
+        getCurrentQuestion().getNoun().setWeight(increment);
+    }
+
+    public void setIncorrect (Question question)
+    {
+        incorrect.add(question);
+    }
+
+    public int getQuestionsSize ()
+    {
+        return questions.size();
+    }
+
+    public int getIncorrectSize ()
+    {
+        return incorrect.size();
     }
 
     public int getPointerLocation ()

@@ -12,11 +12,21 @@ public class Module implements DatabaseObject
     private String name;
     private String difficulty;
 
+    public Module (int moduleID)
+    {
+        this.moduleID = moduleID;
+    }
+
     public Module (int moduleID, String referenceID, String name, String difficulty)
     {
         this.moduleID = moduleID;
         this.referenceID = referenceID;
         this.name = name;
+        this.difficulty = difficulty;
+    }
+
+    public void setDifficulty (String difficulty)
+    {
         this.difficulty = difficulty;
     }
 

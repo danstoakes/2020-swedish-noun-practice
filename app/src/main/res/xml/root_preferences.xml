@@ -37,6 +37,15 @@
         app:title="Preferences"
         app:iconSpaceReserved="false">
 
+        <ListPreference
+            app:defaultValue="20"
+            app:entries="@array/question_entries"
+            app:entryValues="@array/question_values"
+            app:key="@string/question_number_key"
+            app:title="@string/question_number_title"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
         <SwitchPreferenceCompat
             app:key="preference_hint"
             app:title="Show hints"

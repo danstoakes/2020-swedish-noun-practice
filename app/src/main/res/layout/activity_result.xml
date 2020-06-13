@@ -21,29 +21,30 @@
             android:id="@+id/imageIcon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="0"
             app:srcCompat="@drawable/ic_aaaa1" />
 
         <TextView
             android:id="@+id/textMessage"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="0"
             android:gravity="center_horizontal"
-            android:text="Well done!"
-            android:textColor="@android:color/tertiary_text_light"
+            android:text="@string/app_result_header"
             android:textSize="24sp"
             tools:layout_editor_absoluteX="32dp"
             tools:layout_editor_absoluteY="32dp" />
 
         <TextView
             android:id="@+id/textScore"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="0"
             android:gravity="center_horizontal"
-            android:text="Score: 64%"
-            android:textColor="@android:color/tertiary_text_light"
+            android:text="@string/app_result_message"
             android:textSize="18sp"
             tools:layout_editor_absoluteX="32dp"
             tools:layout_editor_absoluteY="32dp" />
@@ -69,7 +70,6 @@
         android:layout_marginBottom="8dp"
         android:layout_weight="0"
         android:text="@string/app_result_credit"
-        android:textColor="@android:color/tertiary_text_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
