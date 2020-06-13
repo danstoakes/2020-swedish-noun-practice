@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.activity.QuestionActivity;
 import com.example.swedishnounpractice.layout.ResponsiveEditText;
-import com.example.swedishnounpractice.layout.ValidEntryListener;
 import com.example.swedishnounpractice.object.Question;
 import com.example.swedishnounpractice.helper.PreferenceHelper;
 
@@ -92,7 +91,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
                 case R.id.buttonSubmit :
                     input.setEnabled(false);
                     button.setVisibility(View.INVISIBLE);
-                    activity.updateManager(input.getText().toString()); // use a callback/listener?
+                    activity.updateManager(input.getText().toString());
                     break;
             }
         }
@@ -113,7 +112,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             play.setOnClickListener(this);
 
             input.setProperties();
-            input.setValidEntryListener(new ValidEntryListener()
+            input.setValidEntryListener(new ResponsiveEditText.ValidEntryListener ()
             {
                 @Override
                 public void onValidEntryAdded(boolean enabled)

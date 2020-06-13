@@ -29,6 +29,11 @@ public class ScrollingRecyclerView extends RecyclerView
         this.listener = listener;
     }
 
+    public interface ScrollCompletedListener
+    {
+        void onScrollCompleted ();
+    }
+
     @Override
     public void setLayoutManager(@Nullable LayoutManager layout)
     {

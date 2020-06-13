@@ -1,3 +1,5 @@
+/* Finalised on 08/06/2020 */
+
 package com.example.swedishnounpractice.utility;
 
 import android.os.Parcel;
@@ -10,13 +12,6 @@ import java.util.List;
 
 public class QuestionManager implements Parcelable
 {
-    /*
-     * Needs refining at a later date.
-     *
-     * Consider re-ordering methods and changing access levels. Also change the parcelable
-     * methods to be more in line with style.
-     */
-
     private static final double CORRECT_WEIGHT = -0.05;
 
     private List<Question> questions;
@@ -34,27 +29,27 @@ public class QuestionManager implements Parcelable
 
     public void setCorrectWeight ()
     {
-        getCurrentQuestion().getNoun().setWeight(CORRECT_WEIGHT);
+        getCurrentQuestion().getNoun().setWeight (CORRECT_WEIGHT);
     }
 
     public void setIncorrectWeight (double increment)
     {
-        getCurrentQuestion().getNoun().setWeight(increment);
+        getCurrentQuestion().getNoun().setWeight (increment);
     }
 
     public void setIncorrect (Question question)
     {
-        incorrect.add(question);
+        incorrect.add (question);
     }
 
     public int getQuestionsSize ()
     {
-        return questions.size();
+        return questions.size ();
     }
 
     public int getIncorrectSize ()
     {
-        return incorrect.size();
+        return incorrect.size ();
     }
 
     public int getPointerLocation ()
@@ -62,14 +57,9 @@ public class QuestionManager implements Parcelable
         return pointer;
     }
 
-    public void loadNextQuestion ()
-    {
-        pointer++;
-    }
-
     public Question getCurrentQuestion ()
     {
-        return questions.get(pointer);
+        return questions.get (pointer);
     }
 
     public List<Question> getQuestions ()
@@ -77,52 +67,73 @@ public class QuestionManager implements Parcelable
         return questions;
     }
 
-    protected QuestionManager(Parcel in) {
-        if (in.readByte() == 0x01) {
-            questions = new ArrayList<>();
-            in.readList(questions, Question.class.getClassLoader());
-        } else {
+    public void loadNextQuestion ()
+    {
+        pointer++;
+    }
+
+    protected QuestionManager (Parcel in)
+    {
+        if (in.readByte() == 0x01)
+        {
+            questions = new ArrayList<> ();
+            in.readList (questions, Question.class.getClassLoader());
+        } else
+        {
             questions = null;
         }
-        if (in.readByte() == 0x01) {
-            incorrect = new ArrayList<>();
+
+        if (in.readByte() == 0x01)
+        {
+            incorrect = new ArrayList<> ();
             in.readList(incorrect, Question.class.getClassLoader());
-        } else {
+        } else
+        {
             incorrect = null;
         }
         pointer = in.readInt();
     }
 
     @Override
-    public int describeContents() {
+    public int describeContents()
+    {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        if (questions == null) {
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        if (questions == null)
+        {
             dest.writeByte((byte) (0x00));
-        } else {
+        } else
+        {
             dest.writeByte((byte) (0x01));
             dest.writeList(questions);
         }
-        if (incorrect == null) {
+
+        if (incorrect == null)
+        {
             dest.writeByte((byte) (0x00));
-        } else {
+        } else
+        {
             dest.writeByte((byte) (0x01));
             dest.writeList(incorrect);
         }
         dest.writeInt(pointer);
     }
 
-    public static final Parcelable.Creator<QuestionManager> CREATOR = new Parcelable.Creator<QuestionManager>() {
+    public static final Parcelable.Creator<QuestionManager> CREATOR = new Parcelable.Creator<QuestionManager> ()
+    {
         @Override
-        public QuestionManager createFromParcel(Parcel in) {
+        public QuestionManager createFromParcel (Parcel in)
+        {
             return new QuestionManager(in);
         }
 
         @Override
-        public QuestionManager[] newArray(int size) {
+        public QuestionManager[] newArray (int size)
+        {
             return new QuestionManager[size];
         }
     };

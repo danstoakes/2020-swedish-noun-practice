@@ -13,11 +13,8 @@ import android.util.DisplayMetrics;
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.adapter.QuestionAdapter;
 import com.example.swedishnounpractice.dialog.CloseDialog;
-import com.example.swedishnounpractice.dialog.DialogOptionSelectedListener;
 import com.example.swedishnounpractice.dialog.FeedbackDialog;
-import com.example.swedishnounpractice.dialog.SnackbarOptionSelectedListener;
 import com.example.swedishnounpractice.helper.DrawableHelper;
-import com.example.swedishnounpractice.layout.ScrollCompletedListener;
 import com.example.swedishnounpractice.object.DatabaseObject;
 import com.example.swedishnounpractice.dialog.ErrorDialog;
 import com.example.swedishnounpractice.object.Module;
@@ -193,14 +190,14 @@ public class QuestionActivity extends AppCompatActivity
 
         final QuestionActivity currentActivity = this;
 
-        factory.setSnackbarOptionSelectedListener(new SnackbarOptionSelectedListener()
+        factory.setSnackbarOptionSelectedListener(new SnackbarFactory.SnackbarOptionSelectedListener()
         {
             @Override
             public void onSnackbarOptionSelected(String header)
             {
                 FeedbackDialog dialog = new FeedbackDialog(currentActivity, factory);
                 dialog.setHeader(header);
-                dialog.setOnDialogOptionSelectedListener(new DialogOptionSelectedListener()
+                dialog.setOnDialogOptionSelectedListener(new FeedbackDialog.DialogOptionSelectedListener ()
                 {
                     @Override
                     public void onDialogOptionSelected()
@@ -269,7 +266,7 @@ public class QuestionActivity extends AppCompatActivity
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
 
-        recyclerView.setScrollCompletedListener(new ScrollCompletedListener()
+        recyclerView.setScrollCompletedListener(new ScrollingRecyclerView.ScrollCompletedListener()
         {
             @Override
             public void onScrollCompleted ()

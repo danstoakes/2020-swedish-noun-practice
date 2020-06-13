@@ -2,12 +2,12 @@ package com.example.swedishnounpractice.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,16 +55,17 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHold
 
     class ModuleHolder extends RecyclerView.ViewHolder
     {
+        private ProgressBar bar;
         private TextView name;
         private TextView difficulty;
-
         private ImageView image;
-
         private Button button;
 
         public ModuleHolder(@NonNull View itemView)
         {
             super(itemView);
+
+            bar = itemView.findViewById(R.id.progressBar);
 
             name = itemView.findViewById(R.id.textName);
             difficulty = itemView.findViewById(R.id.textDescription);
@@ -76,6 +77,8 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHold
 
         private void setAttributes (final Module module)
         {
+            bar.setProgress(module.getPercentageComplete());
+
             name.setText(module.getName());
             difficulty.setText(module.getDifficulty());
 

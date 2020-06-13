@@ -1,3 +1,5 @@
+/* Finalised on 05/06/2020 */
+
 package com.example.swedishnounpractice.object;
 
 import android.content.ContentValues;
@@ -6,6 +8,7 @@ public class Module implements DatabaseObject
 {
     private static final String TABLE_NAME = "Module";
 
+    private int percentageComplete;
     private int moduleID;
 
     private String referenceID;
@@ -25,9 +28,19 @@ public class Module implements DatabaseObject
         this.difficulty = difficulty;
     }
 
+    public void setPercentageComplete (int percentageComplete)
+    {
+        this.percentageComplete = percentageComplete;
+    }
+
     public void setDifficulty (String difficulty)
     {
         this.difficulty = difficulty;
+    }
+
+    public int getPercentageComplete ()
+    {
+        return percentageComplete;
     }
 
     public int getModuleID ()
@@ -72,14 +85,14 @@ public class Module implements DatabaseObject
     public ContentValues getUpdateValues ()
     {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("Difficulty", difficulty);
+        contentValues.put ("Difficulty", difficulty);
 
         return contentValues;
     }
 
     @Override
-    public String[] getUpdateParameters ()
+    public String [] getUpdateParameters ()
     {
-        return new String[] {String.valueOf(moduleID)};
+        return new String [] {String.valueOf(moduleID)};
     }
 }

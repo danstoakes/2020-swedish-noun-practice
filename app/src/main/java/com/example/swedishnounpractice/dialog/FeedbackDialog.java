@@ -62,6 +62,11 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
         this.listener = listener;
     }
 
+    public interface DialogOptionSelectedListener
+    {
+        void onDialogOptionSelected ();
+    }
+
     @Override
     public void onClick (View v)
     {
@@ -86,8 +91,5 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
     public void onDismiss(DialogInterface dialog)
     {
         listener.onDialogOptionSelected ();
-
-        /* if (factory != null)
-            factory.setHalted(false); */
     }
 }

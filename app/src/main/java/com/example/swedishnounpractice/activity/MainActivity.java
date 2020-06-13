@@ -71,9 +71,16 @@ public class MainActivity extends AppCompatActivity
         DatabaseHelper helper = new DatabaseHelper(this.getApplicationContext());
 
         Module placeholder = new Module (0, null, null, null);
-        for (DatabaseObject object : helper.getList(placeholder))
-            modules.add(((Module) object));
 
+        for (DatabaseObject object : helper.getList(placeholder))
+        {
+            Module module = (Module) object;
+
+            double percentage = ((double) helper.getNounCount(module, 0)) / helper.getNounCount(module, 0);
+            module.setPercentageComplete((int) percentage * 100);
+
+            modules.add(module);
+        }
         return modules;
     }
 }

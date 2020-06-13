@@ -1,10 +1,13 @@
+/* Finalised on 05/06/2020 */
+
 package com.example.swedishnounpractice.object;
 
 import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Noun implements DatabaseObject, Parcelable {
+public class Noun implements DatabaseObject, Parcelable
+{
     private static final String TABLE_NAME = "Noun";
 
     private int nounID;
@@ -31,34 +34,24 @@ public class Noun implements DatabaseObject, Parcelable {
         weight += increment;
     }
 
-    public int getNounID ()
-    {
-        return nounID;
-    }
-
     public int getModuleID ()
     {
         return moduleID;
     }
 
-    public String getReferenceID()
+    public String getReferenceID ()
     {
         return referenceID;
     }
 
-    public String getEnglish()
+    public String getEnglish ()
     {
         return english;
     }
 
-    public String getSwedish()
+    public String getSwedish ()
     {
         return swedish;
-    }
-
-    public Double getWeight ()
-    {
-        return weight;
     }
 
     @Override
@@ -89,49 +82,57 @@ public class Noun implements DatabaseObject, Parcelable {
     }
 
     @Override
-    public String[] getUpdateParameters ()
+    public String [] getUpdateParameters ()
     {
-        return new String[] {String.valueOf(nounID)};
+        return new String [] {String.valueOf(nounID)};
     }
 
-    protected Noun(Parcel in) {
-        nounID = in.readInt();
-        moduleID = in.readInt();
-        referenceID = in.readString();
-        english = in.readString();
-        swedish = in.readString();
-        weight = in.readByte() == 0x00 ? null : in.readDouble();
+    protected Noun (Parcel in)
+    {
+        nounID = in.readInt ();
+        moduleID = in.readInt ();
+        referenceID = in.readString ();
+        english = in.readString ();
+        swedish = in.readString ();
+        weight = in.readByte () == 0x00 ? null : in.readDouble ();
     }
 
     @Override
-    public int describeContents() {
+    public int describeContents ()
+    {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(nounID);
-        dest.writeInt(moduleID);
-        dest.writeString(referenceID);
-        dest.writeString(english);
-        dest.writeString(swedish);
-        if (weight == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeDouble(weight);
+    public void writeToParcel (Parcel dest, int flags)
+    {
+        dest.writeInt (nounID);
+        dest.writeInt (moduleID);
+        dest.writeString (referenceID);
+        dest.writeString (english);
+        dest.writeString (swedish);
+
+        if (weight == null)
+        {
+            dest.writeByte ((byte) (0x00));
+        } else
+        {
+            dest.writeByte ((byte) (0x01));
+            dest.writeDouble (weight);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Noun> CREATOR = new Parcelable.Creator<Noun>() {
+    public static final Parcelable.Creator<Noun> CREATOR = new Parcelable.Creator<Noun> ()
+    {
         @Override
-        public Noun createFromParcel(Parcel in) {
+        public Noun createFromParcel (Parcel in)
+        {
             return new Noun(in);
         }
 
         @Override
-        public Noun[] newArray(int size) {
+        public Noun[] newArray (int size)
+        {
             return new Noun[size];
         }
     };

@@ -1,3 +1,5 @@
+/* Finalised on 13/06/2020 */
+
 package com.example.swedishnounpractice.layout;
 
 import android.content.Context;
@@ -8,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 
 public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditText implements View.OnFocusChangeListener
 {
@@ -16,11 +17,16 @@ public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditT
 
     private ValidEntryListener listener;
 
-    public ResponsiveEditText(Context context, AttributeSet attrs)
+    public ResponsiveEditText (Context context, AttributeSet attrs)
     {
-        super(context, attrs);
+        super (context, attrs);
 
         responsiveEditText = this;
+    }
+
+    public interface ValidEntryListener
+    {
+        void onValidEntryAdded (boolean enabled);
     }
 
     public void setValidEntryListener (ValidEntryListener listener)

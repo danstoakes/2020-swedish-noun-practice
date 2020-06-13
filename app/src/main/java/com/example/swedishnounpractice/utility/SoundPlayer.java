@@ -1,3 +1,5 @@
+/* Finalised on 06/06/2020 */
+
 package com.example.swedishnounpractice.utility;
 
 import android.content.Context;
@@ -11,20 +13,15 @@ public class SoundPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
 
     private boolean playing;
 
-    public SoundPlayer(Context context)
+    public SoundPlayer (Context context)
     {
         this.context = context;
 
-        player = new MediaPlayer();
-    }
-
-    public boolean isPlaying()
-    {
-        return playing;
+        player = new MediaPlayer ();
     }
 
     @Override
-    public void onPrepared(MediaPlayer mp)
+    public void onPrepared (MediaPlayer mp)
     {
         playing = true;
 
@@ -32,7 +29,7 @@ public class SoundPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
     }
 
     @Override
-    public void onCompletion(MediaPlayer mp)
+    public void onCompletion (MediaPlayer mp)
     {
         playing = false;
     }
@@ -41,9 +38,9 @@ public class SoundPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
     {
         if (!playing)
         {
-            player = MediaPlayer.create(context, soundID);
-            player.setOnPreparedListener(this);
-            player.setOnCompletionListener(this);
+            player = MediaPlayer.create (context, soundID);
+            player.setOnPreparedListener (this);
+            player.setOnCompletionListener (this);
         }
     }
 }

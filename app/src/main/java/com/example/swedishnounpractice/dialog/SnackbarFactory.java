@@ -93,4 +93,9 @@ public class SnackbarFactory implements View.OnClickListener
 
         listener.onSnackbarOptionSelected (header);
     }
+
+    public interface SnackbarOptionSelectedListener
+    {
+        void onSnackbarOptionSelected (String header);
+    }
 }
