@@ -14,13 +14,13 @@ public class VibrationHelper
     private static final int CORRECT_LENGTH = 150;
     private static final int INCORRECT_LENGTH = 250;
 
-    public static void vibrate (Context context, boolean preferenceDependent, @Nullable String type)
+    public static void vibrate (Context context, boolean preferenceDependent, int code)
     {
         boolean canVibrate = false;
 
         int length = CORRECT_LENGTH;
 
-        if (type != null && type.equals("incorrect"))
+        if (code == ConstantHelper.INCORRECT)
             length = INCORRECT_LENGTH;
 
         if (preferenceDependent)

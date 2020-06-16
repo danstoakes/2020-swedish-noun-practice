@@ -21,6 +21,18 @@ public class PreferenceHelper
         return defValue;
     }
 
+    public static String getStringPreference (Context context, int key, String defValue)
+    {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String keyString = context.getString(key);
+
+        if (preferences != null)
+            return preferences.getString(keyString, defValue);
+
+        return defValue;
+    }
+
     public static boolean getSoundPreference (Context context, int key, boolean defValue)
     {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -34,7 +46,18 @@ public class PreferenceHelper
 
             return soundsPreference && preferences.getBoolean(keyString, defValue);
         }
-
         return defValue;
+    }
+
+    public static int getKeyCatalogue (String name)
+    {
+        switch (name)
+        {
+            case "correct" :
+                return R.string.correct_sounds_key;
+            case "incorrect" :
+                return R.string.error_sounds_key;
+        }
+        return -1;
     }
 }

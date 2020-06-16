@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            tools:srcCompat="@drawable/ic_module1" />
+            tools:srcCompat="@drawable/ic_module_1" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -87,13 +87,16 @@ public class DatabaseHelper extends SQLiteOpenHelper
     {
         List<DatabaseObject> toReturn = new ArrayList<> ();
 
-        String query = object.getSelectString ();
-
         SQLiteDatabase database = this.getReadableDatabase ();
 
         String [] parameters = new String [1];
         if (object instanceof Noun)
-            parameters [0] = String.valueOf(((Noun) object).getModuleID ());
+        {
+            parameters[0] = String.valueOf(((Noun) object).getModuleID());
+            ((Noun) object).setContext (context);
+        }
+
+        String query = object.getSelectString ();
 
         Cursor cursor = database.rawQuery (query, parameters [0] != null ? parameters : null);
 

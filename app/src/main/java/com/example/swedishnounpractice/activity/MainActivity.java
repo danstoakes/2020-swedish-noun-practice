@@ -1,6 +1,9 @@
+/* Finalised on 14/06/2020 */
+
 package com.example.swedishnounpractice.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,9 +12,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.adapter.ModuleAdapter;
+import com.example.swedishnounpractice.listener.OnAdapterEventListener;
 import com.example.swedishnounpractice.object.DatabaseObject;
 import com.example.swedishnounpractice.object.Module;
 import com.example.swedishnounpractice.utility.DatabaseHelper;
@@ -20,14 +25,13 @@ import com.example.swedishnounpractice.helper.FlagHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements OnAdapterEventListener
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setTitle(R.string.main_header);
 
         FlagHelper.setFlags(this);
@@ -76,11 +80,23 @@ public class MainActivity extends AppCompatActivity
         {
             Module module = (Module) object;
 
-            double percentage = ((double) helper.getNounCount(module, 0)) / helper.getNounCount(module, 0);
-            module.setPercentageComplete((int) percentage * 100);
+            double percentage = ((double) helper.getNounCount(module, 1)) / helper.getNounCount(module, 0);
+            module.setPercentageComplete((int) Math.round(percentage * 100));
 
             modules.add(module);
         }
         return modules;
+    }
+
+    @Override
+    public void onAdapterItemClick(View view, int moduleID, @Nullable String text)
+    {
+        if (view.getId() == R.id.buttonStart)
+        {
+            Intent questionIntent = new Intent(MainActivity.this, QuestionActivity.class)
+                    .putExtra("moduleID", moduleID);
+
+            startActivity(questionIntent);
+        }
     }
 }

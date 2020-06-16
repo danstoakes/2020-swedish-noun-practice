@@ -21,7 +21,7 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
 {
     private DialogOptionSelectedListener listener;
 
-    public FeedbackDialog (@NonNull Context context, @Nullable SnackbarFactory factory)
+    public FeedbackDialog (@NonNull Context context)
     {
         super(context);
 
@@ -70,18 +70,19 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
     @Override
     public void onClick (View v)
     {
+        QuestionActivity activity = (QuestionActivity) getActivity ();
         switch (v.getId())
         {
             case R.id.buttonSad:
-                ((QuestionActivity) getActivity()).setQuestionWeight(0.2);
+                //activity.setQuestionWeight(0.2);
                 dismiss();
                 break;
             case R.id.buttonNeutral:
-                ((QuestionActivity) getActivity()).setQuestionWeight(0.1);
+                //activity.setQuestionWeight(0.1);
                 dismiss();
                 break;
             case R.id.buttonHappy:
-                ((QuestionActivity) getActivity()).setQuestionWeight(0.05);
+                //activity.setQuestionWeight(0.05);
                 dismiss();
                 break;
         }

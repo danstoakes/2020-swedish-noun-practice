@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0"
-            app:srcCompat="@drawable/ic_module1" />
+            app:srcCompat="@drawable/ic_module_1" />
 
         <TextView
             android:id="@+id/textMessage"

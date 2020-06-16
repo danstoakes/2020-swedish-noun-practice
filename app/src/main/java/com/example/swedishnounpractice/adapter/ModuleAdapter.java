@@ -1,7 +1,8 @@
+/* Finalised on 14/06/2020 */
+
 package com.example.swedishnounpractice.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,86 +15,91 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swedishnounpractice.R;
-import com.example.swedishnounpractice.activity.QuestionActivity;
 import com.example.swedishnounpractice.helper.DrawableHelper;
+import com.example.swedishnounpractice.listener.OnAdapterEventListener;
+import com.example.swedishnounpractice.listener.OnAdapterInteractionListener;
 import com.example.swedishnounpractice.object.Module;
 
 import java.util.List;
 
 public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHolder>
 {
-    private Context context;
+    private OnAdapterEventListener listener;
 
-    private List<Module> modules;
+    private final List<Module> modules;
 
-    public ModuleAdapter(Context context, List<Module> modules)
+    public ModuleAdapter (Context context, List<Module> modules)
     {
-        this.context = context;
+        if (context instanceof OnAdapterEventListener)
+            listener = (OnAdapterEventListener) context;
+
         this.modules = modules;
     }
 
     @NonNull
     @Override
-    public ModuleHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public ModuleHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType)
     {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_module, parent, false);
+        View view = LayoutInflater.from (
+                parent.getContext()).inflate(R.layout.item_module, parent, false);
+
         return new ModuleHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ModuleHolder holder, int position)
+    public void onBindViewHolder (@NonNull ModuleHolder holder, int position)
     {
-        Module module = modules.get(position);
-        holder.setAttributes(module);
+        Module module = modules.get (position);
+        holder.setAttributes (module);
     }
 
     @Override
-    public int getItemCount()
+    public int getItemCount ()
     {
         return modules.size();
     }
 
+    public void setAdapterEventListener (OnAdapterEventListener listener)
+    {
+        this.listener = listener;
+    }
+
     class ModuleHolder extends RecyclerView.ViewHolder
     {
-        private ProgressBar bar;
-        private TextView name;
-        private TextView difficulty;
-        private ImageView image;
-        private Button button;
+        private final ProgressBar bar;
+        private final TextView name;
+        private final TextView difficulty;
+        private final ImageView image;
+        private final Button button;
 
-        public ModuleHolder(@NonNull View itemView)
+        public ModuleHolder (@NonNull View itemView)
         {
             super(itemView);
 
-            bar = itemView.findViewById(R.id.progressBar);
-
-            name = itemView.findViewById(R.id.textName);
-            difficulty = itemView.findViewById(R.id.textDescription);
-
-            image = itemView.findViewById(R.id.imageIcon);
-
-            button = itemView.findViewById(R.id.buttonStart);
+            bar = itemView.findViewById (R.id.progressBar);
+            name = itemView.findViewById (R.id.textName);
+            difficulty = itemView.findViewById (R.id.textDescription);
+            image = itemView.findViewById (R.id.imageIcon);
+            button = itemView.findViewById (R.id.buttonStart);
         }
 
         private void setAttributes (final Module module)
         {
-            bar.setProgress(module.getPercentageComplete());
+            bar.setProgress (module.getPercentageComplete ());
+            name.setText (module.getName ());
+            difficulty.setText (module.getDifficulty ());
 
-            name.setText(module.getName());
-            difficulty.setText(module.getDifficulty());
+            int imageID = DrawableHelper.getResource ("ic_" + module.getReferenceID(), true);
 
-            image.setImageResource(
-                    DrawableHelper.getResource("ic_" + module.getReferenceID(), true));
+            if (imageID != -1)
+                image.setImageResource (imageID);
 
-            button.setOnClickListener(new View.OnClickListener()
+            button.setOnClickListener (new View.OnClickListener ()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    Intent questionIntent = new Intent(v.getContext(), QuestionActivity.class)
-                            .putExtra("moduleID", module.getModuleID());
-
-                    context.startActivity(questionIntent);
+                    listener.onAdapterItemClick (v, module.getModuleID(), null);
                 }
             });
         }

@@ -47,13 +47,13 @@
             app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
-            app:key="preference_hint"
+            app:key="@string/hint_key"
             app:title="Show hints"
             app:defaultValue="false"
             app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
-            app:key="preference_vibrate"
+            app:key="@string/vibration_key"
             app:title="Vibrations"
             app:defaultValue="false"
             app:iconSpaceReserved="false" />

@@ -13,121 +13,127 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swedishnounpractice.R;
-import com.example.swedishnounpractice.activity.QuestionActivity;
 import com.example.swedishnounpractice.layout.ResponsiveEditText;
+import com.example.swedishnounpractice.listener.OnAdapterEventListener;
+import com.example.swedishnounpractice.listener.OnAdapterInteractionListener;
 import com.example.swedishnounpractice.object.Question;
-import com.example.swedishnounpractice.helper.PreferenceHelper;
 
 import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.QuestionHolder>
 {
-    private Context context;
+    private OnAdapterInteractionListener listener;
 
     private List<Question> questions;
 
     public QuestionAdapter (Context context, List<Question> questions)
     {
-        this.context = context;
+        if (context instanceof OnAdapterInteractionListener)
+            listener = (OnAdapterInteractionListener) context;
+
         this.questions = questions;
     }
 
     @NonNull
     @Override
-    public QuestionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public QuestionHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType)
     {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_question, parent, false);
+        View view = LayoutInflater.from (
+                parent.getContext()).inflate(R.layout.item_question, parent, false);
         return new QuestionHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull QuestionAdapter.QuestionHolder holder, int position)
+    public void onBindViewHolder (@NonNull QuestionAdapter.QuestionHolder holder, int position)
     {
-        Question question = questions.get(position);
-        holder.setAttributes(question);
+        Question question = questions.get (position);
+        holder.setAttributes (question);
     }
 
     @Override
-    public int getItemCount()
+    public int getItemCount ()
     {
         return questions.size();
     }
 
-    class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public void setAdapterInteractionListener (OnAdapterInteractionListener listener)
     {
-        private ProgressBar bar;
-        private TextView header;
-        private TextView word;
-        private ImageButton play;
-        private ResponsiveEditText input;
-        private Button button;
+        this.listener = listener;
+    }
+
+    class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ResponsiveEditText.ValidEntryListener
+    {
+        private final ProgressBar bar;
+        private final TextView header;
+        private final TextView word;
+        private final ImageButton play;
+        private final ResponsiveEditText input;
+        private final ImageButton hint;
+        private final Button button;
 
         public QuestionHolder(@NonNull final View itemView)
         {
             super (itemView);
 
             bar = itemView.findViewById(R.id.barProgress);
-
             header = itemView.findViewById(R.id.textHeader);
             word = itemView.findViewById(R.id.textWord);
-
             play = itemView.findViewById(R.id.imagePlay);
-
             input = itemView.findViewById(R.id.textInput);
-
+            hint = itemView.findViewById(R.id.imageHint);
             button = itemView.findViewById(R.id.buttonSubmit);
         }
 
         @Override
-        public void onClick(View v)
+        public void onClick (View v)
         {
-            QuestionActivity activity = (QuestionActivity) context;
-
-            switch (v.getId())
+            if (v.getId () == button.getId ())
             {
-                case R.id.imagePlay :
-                    activity.requestSound(true, null);
-                    break;
-                case R.id.buttonSubmit :
-                    input.setEnabled(false);
-                    button.setVisibility(View.INVISIBLE);
-                    activity.updateManager(input.getText().toString());
-                    break;
+                input.setEnabled (false);
+                button.setEnabled (false);
             }
+
+            if (input.getText () != null)
+                listener.onAdapterItemClick (v, 0, input.getText().toString());
+        }
+
+        @Override
+        public void onValidEntryAdded (boolean enabled)
+        {
+            button.setEnabled (enabled);
+        }
+
+        public String getHeader (Question question)
+        {
+            String headerText = "Skriv svaret på engelska";
+            if (question.isToSwedish ())
+                headerText = "Write the answer in Swedish";
+
+            return headerText;
         }
 
         private void setAttributes (final Question question)
         {
-            QuestionActivity activity = (QuestionActivity) context;
+            bar.setProgress((int) ((float) listener.getQuestionNumber() / getItemCount () * 100));
 
-            bar.setProgress((int) ((float) activity.getQuestionNumber() / getItemCount () * 100));
-
-            String headerText = "Skriv svaret på engelska";
-            if (question.isToSwedish())
-                headerText = "Write the answer in Swedish";
-
-            header.setText(headerText);
+            header.setText(getHeader(question));
             word.setText(question.getQuestion());
 
             play.setOnClickListener(this);
 
-            input.setProperties();
-            input.setValidEntryListener(new ResponsiveEditText.ValidEntryListener ()
+            input.setProperties ();
+            input.setValidEntryListener(this);
+
+            if (listener.isViewVisible(hint))
             {
-                @Override
-                public void onValidEntryAdded(boolean enabled)
-                {
-                    button.setEnabled(enabled);
-                }
-            });
+                hint.setVisibility (View.VISIBLE);
+                hint.setOnClickListener (this);
+            }
 
-            button.setEnabled(false);
-            button.setVisibility(View.VISIBLE);
-            button.setOnClickListener(this);
+            button.setEnabled (false);
+            button.setOnClickListener (this);
 
-            if (activity.getQuestionNumber() == 1 &&
-                    PreferenceHelper.getSoundPreference(context, R.string.word_sounds_key, true))
-                activity.requestSound(true, null);
+            listener.onAdapterLoaded ();
         }
     }
 }

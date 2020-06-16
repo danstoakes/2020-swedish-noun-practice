@@ -1,4 +1,4 @@
-/* Finalised on 13/06/2020 */
+/* Finalised on 15/06/2020 */
 
 package com.example.swedishnounpractice.layout;
 
@@ -6,6 +6,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.KeyListener;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -13,15 +14,14 @@ import android.view.inputmethod.InputMethodManager;
 
 public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditText implements View.OnFocusChangeListener
 {
-    private ResponsiveEditText responsiveEditText;
-
     private ValidEntryListener listener;
+    private KeyListener keyListener;
 
     public ResponsiveEditText (Context context, AttributeSet attrs)
     {
         super (context, attrs);
 
-        responsiveEditText = this;
+        keyListener = getKeyListener ();
     }
 
     public interface ValidEntryListener
@@ -36,26 +36,26 @@ public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditT
 
     public void setProperties ()
     {
-        setText("");
-        setEnabled(true);
+        setEnabled (true);
+        setKeyListener (keyListener);
+        setText ("");
+        setImeOptions (EditorInfo.IME_ACTION_DONE);
+        setRawInputType (InputType.TYPE_CLASS_TEXT);
+        setInputType (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        setOnFocusChangeListener (this);
 
-        setImeOptions(EditorInfo.IME_ACTION_DONE);
-        setRawInputType(InputType.TYPE_CLASS_TEXT);
-        setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        requestFocus ();
 
-        setOnFocusChangeListener(this);
-        requestFocus();
-
-        addTextChangedListener(new TextWatcher()
+        addTextChangedListener (new TextWatcher ()
         {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void beforeTextChanged (CharSequence s, int start, int count, int after) { }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void onTextChanged (CharSequence s, int start, int before, int count) { }
 
             @Override
-            public void afterTextChanged(Editable s)
+            public void afterTextChanged (Editable s)
             {
                 listener.onValidEntryAdded (!s.toString().trim().equals(""));
             }
@@ -63,9 +63,21 @@ public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditT
     }
 
     @Override
-    public void onFocusChange(View v, boolean hasFocus)
+    public void setEnabled (boolean enabled)
     {
-        setKeyboardVisibility (hasFocus);
+        setCursorVisible (enabled);
+        setAlpha (enabled ? 1 : (float) 0.75);
+
+        if (!enabled)
+            setKeyListener (null);
+        // this method normally causes the keyboard to disappear on disable (line 228)
+        // https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/widget/TextView.java
+    }
+
+    @Override
+    public void onFocusChange (View v, boolean hasFocus)
+    {
+        setKeyboardVisible ();
     }
 
     private Runnable showKeyboardRunnable = new Runnable ()
@@ -77,24 +89,12 @@ public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditT
                     Context.INPUT_METHOD_SERVICE);
 
             if (manager != null)
-                manager.showSoftInput(responsiveEditText, 0);
+                manager.showSoftInput(ResponsiveEditText.this, 0);
         }
     };
 
-    private void setKeyboardVisibility (boolean visible)
+    private void setKeyboardVisible ()
     {
-        if (visible)
-        {
-            post (showKeyboardRunnable);
-        } else
-        {
-            removeCallbacks(showKeyboardRunnable);
-
-            InputMethodManager manager = (InputMethodManager) getContext().getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-
-            if (manager != null)
-                manager.hideSoftInputFromWindow(getWindowToken(), 0);
-        }
+        post (showKeyboardRunnable);
     }
 }

@@ -27,49 +27,49 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_module_1" />
+            tools:layout_editor_absoluteX="130dp"
+            tools:layout_editor_absoluteY="584dp">
 
             <TextView
-                android:id="@+id/textErrorHeader"
-                android:layout_width="match_parent"
+                android:id="@+id/textHintHeader"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
-                android:paddingBottom="4dp"
-                android:text="@string/app_error_header"
+                android:paddingBottom="24dp"
+                android:text="@string/app_hint_header"
                 android:textSize="24sp"
                 tools:layout_editor_absoluteX="32dp"
                 tools:layout_editor_absoluteY="32dp" />
 
             <TextView
-                android:id="@+id/textErrorMessage"
-                android:layout_width="wrap_content"
+                android:id="@+id/textEnglish"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
                 android:gravity="center_horizontal"
-                android:paddingBottom="24dp"
-                android:text="@string/app_error_message"
+                android:text="@string/app_hint_english"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="32dp"
                 tools:layout_editor_absoluteY="32dp" />
 
+            <TextView
+                android:id="@+id/textSwedish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/app_hint_swedish"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
             <Button
-                android:id="@+id/buttonRetry"
+                android:id="@+id/buttonDismiss"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
                 android:background="@drawable/rounded_button"
-                android:text="@string/app_error_button" />
+                android:text="@string/app_dismiss_button" />
 
         </LinearLayout>
 

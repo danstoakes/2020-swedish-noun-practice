@@ -2,29 +2,96 @@
 
 package com.example.swedishnounpractice.utility;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.swedishnounpractice.helper.ConstantHelper;
+import com.example.swedishnounpractice.listener.OnAdapterInteractionListener;
+import com.example.swedishnounpractice.object.DatabaseObject;
+import com.example.swedishnounpractice.object.Module;
+import com.example.swedishnounpractice.object.Noun;
 import com.example.swedishnounpractice.object.Question;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class QuestionManager implements Parcelable
 {
     private static final double CORRECT_WEIGHT = -0.05;
+    private static final double INCORRECT_WEIGHT = 0.05;
 
     private List<Question> questions;
     private List<Question> incorrect;
 
     private int pointer;
 
-    public QuestionManager (List<Question> questions)
+    private int moduleID;
+
+    private OnAdapterInteractionListener listener;
+
+    private DatabaseHelper helper;
+
+    public QuestionManager (Context context, int moduleID)
     {
-        this.questions = questions;
+        if (context instanceof OnAdapterInteractionListener)
+            listener = (OnAdapterInteractionListener) context;
+
+        helper = new DatabaseHelper (context);
+
+        this.questions = new ArrayList<>();
         incorrect = new ArrayList<>();
 
         pointer = 0;
+
+        this.moduleID = moduleID;
+    }
+
+    public void initialise ()
+    {
+        Noun placeholder = new Noun (
+                0, moduleID, null, null, null, null);
+
+        List<DatabaseObject> nounObjects = helper.getList(placeholder);
+
+        if (nounObjects.size() == 0)
+        {
+            listener.onSetupError ();
+        } else
+        {
+            for (int i = 0; i < nounObjects.size(); i++)
+            {
+                Noun noun = ((Noun) nounObjects.get(i));
+
+                questions.add (new Question(noun, noun.getEnglish(), noun.getSwedish(), true));
+                questions.add (new Question(noun, noun.getSwedish(), noun.getEnglish(), false));
+            }
+            Collections.shuffle(questions);
+        }
+    }
+
+    public void finalise ()
+    {
+        for (Question question : getQuestions ())
+            helper.update (question.getNoun ());
+
+        Module module = new Module (getCurrentQuestion().getNoun().getModuleID());
+
+        double averageWeight = helper.getModuleWeight(module);
+
+        String difficulty = "Easy";
+        if (averageWeight > 0 && averageWeight < 0.2)
+        {
+            difficulty = "Normal";
+        } else if (averageWeight > 0.2)
+        {
+            difficulty = "Hard";
+        }
+
+        module.setDifficulty(difficulty);
+
+        helper.update (module);
     }
 
     public void setCorrectWeight ()
@@ -32,9 +99,10 @@ public class QuestionManager implements Parcelable
         getCurrentQuestion().getNoun().setWeight (CORRECT_WEIGHT);
     }
 
-    public void setIncorrectWeight (double increment)
+    public void setIncorrectWeight ()
     {
-        getCurrentQuestion().getNoun().setWeight (increment);
+        getCurrentQuestion().getNoun().setWeight (INCORRECT_WEIGHT);
+        setIncorrect (getCurrentQuestion());
     }
 
     public void setIncorrect (Question question)

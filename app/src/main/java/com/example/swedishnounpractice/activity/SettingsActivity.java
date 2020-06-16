@@ -63,19 +63,21 @@ public class SettingsActivity extends AppCompatActivity
             if (key.equals(vibrateKey))
             {
                 if (sharedPreferences.getBoolean(key, false))
-                    VibrationHelper.vibrate(getActivity(), false, null);
+                    VibrationHelper.vibrate(getActivity(), false, -1);
             }
         }
 
         @Override
-        public void onResume() {
+        public void onResume()
+        {
             super.onResume();
             getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         }
 
         @Override
-        public void onPause() {
+        public void onPause()
+        {
             getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
             super.onPause();
         }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Learn Swedish</string>
+    <string name="app_name">NordNoun</string>
 
     <string name="main_header">Modules</string>
 
@@ -21,6 +21,11 @@
 
     <string name="app_feedback_header">Correct answer: %s</string>
     <string name="app_feedback_message">How did you find this question?</string>
+
+    <string name="app_hint_header">Need some help?</string>
+    <string name="app_hint_english">English: %s</string>
+    <string name="app_hint_swedish">Swedish: %s</string>
+    <string name="app_dismiss_button">Dismiss</string>
 
     <string name="app_result_credit">Developed by Damanda</string>
     <string name="app_result_header">Well done!</string>

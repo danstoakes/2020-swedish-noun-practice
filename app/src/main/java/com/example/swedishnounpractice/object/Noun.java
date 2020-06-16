@@ -3,8 +3,14 @@
 package com.example.swedishnounpractice.object;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.example.swedishnounpractice.R;
+import com.example.swedishnounpractice.helper.PreferenceHelper;
+
+import java.util.Locale;
 
 public class Noun implements DatabaseObject, Parcelable
 {
@@ -19,6 +25,8 @@ public class Noun implements DatabaseObject, Parcelable
 
     private Double weight;
 
+    private Context context;
+
     public Noun (int nounID, int moduleID, String referenceID, String english, String swedish, Double weight)
     {
         this.nounID = nounID;
@@ -32,6 +40,11 @@ public class Noun implements DatabaseObject, Parcelable
     public void setWeight (double increment)
     {
         weight += increment;
+    }
+
+    public void setContext (Context context)
+    {
+        this.context = context;
     }
 
     public int getModuleID ()
@@ -63,7 +76,12 @@ public class Noun implements DatabaseObject, Parcelable
     @Override
     public String getSelectString ()
     {
-        return "SELECT * FROM Noun WHERE ModuleID = ? ORDER BY Weight DESC LIMIT 4;"; // 10
+        String queryString = "SELECT * FROM Noun WHERE ModuleID = ? ORDER BY Weight DESC LIMIT %d";
+
+        String questionPreference = PreferenceHelper.getStringPreference(
+                context, R.string.question_number_key, "20");
+
+        return String.format(Locale.getDefault(), queryString, Integer.parseInt(questionPreference) / 2);
     }
 
     @Override
@@ -77,6 +95,7 @@ public class Noun implements DatabaseObject, Parcelable
     {
         ContentValues contentValues = new ContentValues();
         contentValues.put("Weight", weight);
+        contentValues.put("Seen", 1);
 
         return contentValues;
     }
