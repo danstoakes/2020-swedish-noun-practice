@@ -11,7 +11,7 @@ public interface OnAdapterInteractionListener extends OnAdapterEventListener
 
     void onSetupError ();
 
-    void onAdapterLoaded ();
+    void onAdapterLoaded (int position);
 
     int getQuestionNumber ();
 

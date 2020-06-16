@@ -21,6 +21,8 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
 {
     private DialogOptionSelectedListener listener;
 
+    private double weight;
+
     public FeedbackDialog (@NonNull Context context)
     {
         super(context);
@@ -64,7 +66,7 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
 
     public interface DialogOptionSelectedListener
     {
-        void onDialogOptionSelected ();
+        void onDialogOptionSelected (double weight);
     }
 
     @Override
@@ -75,14 +77,17 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
         {
             case R.id.buttonSad:
                 //activity.setQuestionWeight(0.2);
+                weight = 0.2;
                 dismiss();
                 break;
             case R.id.buttonNeutral:
                 //activity.setQuestionWeight(0.1);
+                weight = 0.1;
                 dismiss();
                 break;
             case R.id.buttonHappy:
                 //activity.setQuestionWeight(0.05);
+                weight = 0.05;
                 dismiss();
                 break;
         }
@@ -91,6 +96,6 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
     @Override
     public void onDismiss(DialogInterface dialog)
     {
-        listener.onDialogOptionSelected ();
+        listener.onDialogOptionSelected (weight);
     }
 }

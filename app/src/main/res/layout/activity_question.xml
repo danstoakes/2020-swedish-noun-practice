@@ -1,16 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context=".activity.QuestionActivity">
 
     <com.example.swedishnounpractice.layout.ScrollingRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="horizontal"
-        android:overScrollMode="never" />
+        android:overScrollMode="never">
+
+    </com.example.swedishnounpractice.layout.ScrollingRecyclerView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/snackView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="0"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/incorrectAnswer"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="6dp"
+        app:contentPadding="0dp">
+
+        <LinearLayout
+            android:id="@+id/layoutMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:text="INCORRECT"
+                android:textAlignment="center"
+                android:textColor="@color/cardview_light_background"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <RelativeLayout
+                android:id="@+id/layoutRightAlign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|end"
+                android:visibility="visible">
+
+                <Button
+                    android:id="@+id/buttonShow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/rounded_button"
+                    android:text="More"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>

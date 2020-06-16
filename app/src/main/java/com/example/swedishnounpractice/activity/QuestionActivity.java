@@ -20,9 +20,9 @@ import com.example.swedishnounpractice.helper.CheckAnswerHelper;
 import com.example.swedishnounpractice.helper.ConstantHelper;
 import com.example.swedishnounpractice.helper.DrawableHelper;
 import com.example.swedishnounpractice.dialog.ErrorDialog;
+import com.example.swedishnounpractice.layout.AnimatedSnackbar;
 import com.example.swedishnounpractice.listener.OnAdapterInteractionListener;
 import com.example.swedishnounpractice.object.Question;
-import com.example.swedishnounpractice.dialog.SnackbarFactory;
 import com.example.swedishnounpractice.helper.FlagHelper;
 import com.example.swedishnounpractice.helper.PreferenceHelper;
 import com.example.swedishnounpractice.utility.QuestionManager;
@@ -30,15 +30,12 @@ import com.example.swedishnounpractice.layout.ScrollingLayoutManager;
 import com.example.swedishnounpractice.layout.ScrollingRecyclerView;
 import com.example.swedishnounpractice.utility.SoundPlayer;
 import com.example.swedishnounpractice.helper.VibrationHelper;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-public class QuestionActivity extends AppCompatActivity implements OnAdapterInteractionListener, SnackbarFactory.SnackbarOptionSelectedListener
+public class QuestionActivity extends AppCompatActivity implements OnAdapterInteractionListener, AnimatedSnackbar.AnimatedSnackbarEventListener
 {
     private QuestionManager manager;
-
-    private SnackbarFactory factory;
 
     private SoundPlayer player;
 
@@ -125,12 +122,20 @@ public class QuestionActivity extends AppCompatActivity implements OnAdapterInte
     }
 
     @Override
-    public void onAdapterLoaded ()
+    public void onAdapterLoaded (int adapterPosition)
     {
-        boolean wordSounds = PreferenceHelper.getSoundPreference(this, R.string.word_sounds_key, true);
+        int activityPosition = manager.getPointerLocation () + 1;
 
-        if (getQuestionNumber () == 1 && wordSounds)
-            playSound (manager.getCurrentQuestion().getNoun().getReferenceID(), R.string.word_sounds_key);
+        if (activityPosition != adapterPosition)
+        {
+            onSetupError();
+        } else
+        {
+            boolean wordSounds = PreferenceHelper.getSoundPreference(this, R.string.word_sounds_key, true);
+
+            if (getQuestionNumber () == 1 && wordSounds)
+                playSound (manager.getCurrentQuestion().getNoun().getReferenceID(), R.string.word_sounds_key);
+        }
     }
 
     public void playSound (String soundID, int preferenceKey)
@@ -188,37 +193,27 @@ public class QuestionActivity extends AppCompatActivity implements OnAdapterInte
 
     private void handleOutput (int code)
     {
-        factory = new SnackbarFactory (this);
-        factory.setSnackbarOptionSelectedListener(this);
-        factory.make(code, manager.getCurrentQuestion().getAnswer()).addCallback(new Snackbar.Callback()
+        AnimatedSnackbar snackbar;
+        switch (code)
         {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event)
-            {
-                super.onDismissed(transientBottomBar, event);
-
-                handleNextAction (factory.isDialogShowing ());
-            }
-        });
-        factory.show ();
-    }
-
-    @Override
-    public void onSnackbarOptionSelected (String header)
-    {
-        FeedbackDialog dialog = new FeedbackDialog (QuestionActivity.this);
-        dialog.setHeader(header);
-        dialog.setOnDialogOptionSelectedListener(new FeedbackDialog.DialogOptionSelectedListener ()
-        {
-            @Override
-            public void onDialogOptionSelected()
-            {
-                factory.setDialogShowing (false);
-
-                handleNextAction (factory.isDialogShowing());
-            }
-        });
-        dialog.show();
+            case ConstantHelper.CORRECT :
+                snackbar = new AnimatedSnackbar (findViewById (R.id.snackView),
+                        getString (R.string.app_answer_correct), R.color.correctAnswer, AnimatedSnackbar.WAIT_CORRECT);
+                break;
+            case ConstantHelper.CORRECT_TYPO :
+                snackbar = new AnimatedSnackbar (
+                        findViewById (R.id.snackView), getString(R.string.app_answer_correct_spelling,
+                        manager.getCurrentQuestion().getAnswer()), R.color.correctAnswer, AnimatedSnackbar.WAIT_CORRECT);
+                break;
+            default :
+                snackbar = new AnimatedSnackbar (
+                        findViewById (R.id.snackView), getString (R.string.app_answer_incorrect),
+                        R.color.incorrectAnswer, AnimatedSnackbar.WAIT_INCORRECT);
+                snackbar.setAction (true);
+                break;
+        }
+        snackbar.setEventListener (this);
+        snackbar.show ();
     }
 
     private void handleNextAction (boolean dialogShowing)
@@ -256,14 +251,14 @@ public class QuestionActivity extends AppCompatActivity implements OnAdapterInte
     }
 
     @Override
-    public void onSetupError()
+    public void onSetupError ()
     {
         ErrorDialog dialog = new ErrorDialog (QuestionActivity.this);
         dialog.show ();
     }
 
     @Override
-    public int getQuestionNumber()
+    public int getQuestionNumber ()
     {
         return manager.getPointerLocation() + 1;
     }
@@ -275,5 +270,30 @@ public class QuestionActivity extends AppCompatActivity implements OnAdapterInte
             return PreferenceHelper.getStandardPreference(this, R.string.hint_key, false);
 
         return true;
+    }
+
+    @Override
+    public void onDismiss (AnimatedSnackbar animatedSnackbar)
+    {
+        handleNextAction (animatedSnackbar.isDialogShowing ());
+    }
+
+    @Override
+    public void onActionItemClick (final AnimatedSnackbar animatedSnackbar)
+    {
+        animatedSnackbar.setDialogShowing (true);
+
+        FeedbackDialog dialog = new FeedbackDialog (QuestionActivity.this);
+        dialog.setHeader (manager.getCurrentQuestion().getAnswer());
+        dialog.setOnDialogOptionSelectedListener(new FeedbackDialog.DialogOptionSelectedListener ()
+        {
+            @Override
+            public void onDialogOptionSelected (double weight)
+            {
+                animatedSnackbar.setDialogShowing (false);
+                animatedSnackbar.moveDown (AnimatedSnackbar.DIALOG_INTERIM);
+            }
+        });
+        dialog.show();
     }
 }

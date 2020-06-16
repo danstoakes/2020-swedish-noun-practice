@@ -133,7 +133,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             button.setEnabled (false);
             button.setOnClickListener (this);
 
-            listener.onAdapterLoaded ();
+            listener.onAdapterLoaded (listener.getQuestionNumber ());
         }
     }
 }
