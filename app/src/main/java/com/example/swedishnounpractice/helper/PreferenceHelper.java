@@ -1,3 +1,5 @@
+/* Finalised on 15/06/2020 */
+
 package com.example.swedishnounpractice.helper;
 
 import android.content.Context;
@@ -47,17 +49,5 @@ public class PreferenceHelper
             return soundsPreference && preferences.getBoolean(keyString, defValue);
         }
         return defValue;
-    }
-
-    public static int getKeyCatalogue (String name)
-    {
-        switch (name)
-        {
-            case "correct" :
-                return R.string.correct_sounds_key;
-            case "incorrect" :
-                return R.string.error_sounds_key;
-        }
-        return -1;
     }
 }

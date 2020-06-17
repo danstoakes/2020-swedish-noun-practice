@@ -1,11 +1,11 @@
+/* Finalised on 15/06/2020 */
+
 package com.example.swedishnounpractice.helper;
 
 import android.content.Context;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-
-import androidx.annotation.Nullable;
 
 import com.example.swedishnounpractice.R;
 

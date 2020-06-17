@@ -222,6 +222,7 @@ public class QuestionActivity extends AppCompatActivity
                 manager.finalise ();
 
                 Intent resultIntent = new Intent(QuestionActivity.this, ResultActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         .putExtra("score", (manager.getQuestionsSize() - manager.getIncorrectSize()))
                         .putExtra("total", manager.getQuestionsSize());
 
