@@ -2,7 +2,6 @@
 
 package com.example.swedishnounpractice.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.helper.DrawableHelper;
-import com.example.swedishnounpractice.listener.OnAdapterEventListener;
-import com.example.swedishnounpractice.listener.OnAdapterInteractionListener;
 import com.example.swedishnounpractice.object.Module;
 
 import java.util.List;
@@ -28,11 +26,8 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHold
 
     private final List<Module> modules;
 
-    public ModuleAdapter (Context context, List<Module> modules)
+    public ModuleAdapter (List<Module> modules)
     {
-        if (context instanceof OnAdapterEventListener)
-            listener = (OnAdapterEventListener) context;
-
         this.modules = modules;
     }
 
@@ -62,6 +57,11 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHold
     public void setAdapterEventListener (OnAdapterEventListener listener)
     {
         this.listener = listener;
+    }
+
+    public interface OnAdapterEventListener
+    {
+        void onAdapterItemClick (View view, int moduleID, @Nullable String text);
     }
 
     class ModuleHolder extends RecyclerView.ViewHolder

@@ -1,3 +1,5 @@
+/* Finalised on 17/06/2020 */
+
 package com.example.swedishnounpractice.dialog;
 
 import android.app.Activity;
@@ -12,10 +14,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.swedishnounpractice.R;
-import com.example.swedishnounpractice.activity.QuestionActivity;
 
 public class FeedbackDialog extends Dialog implements View.OnClickListener, Dialog.OnDismissListener
 {
@@ -72,21 +72,17 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
     @Override
     public void onClick (View v)
     {
-        QuestionActivity activity = (QuestionActivity) getActivity ();
         switch (v.getId())
         {
             case R.id.buttonSad:
-                //activity.setQuestionWeight(0.2);
                 weight = 0.2;
                 dismiss();
                 break;
             case R.id.buttonNeutral:
-                //activity.setQuestionWeight(0.1);
                 weight = 0.1;
                 dismiss();
                 break;
             case R.id.buttonHappy:
-                //activity.setQuestionWeight(0.05);
                 weight = 0.05;
                 dismiss();
                 break;

@@ -6,8 +6,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.swedishnounpractice.helper.ConstantHelper;
-import com.example.swedishnounpractice.listener.OnAdapterInteractionListener;
+import com.example.swedishnounpractice.adapter.QuestionAdapter;
 import com.example.swedishnounpractice.object.DatabaseObject;
 import com.example.swedishnounpractice.object.Module;
 import com.example.swedishnounpractice.object.Noun;
@@ -29,14 +28,14 @@ public class QuestionManager implements Parcelable
 
     private int moduleID;
 
-    private OnAdapterInteractionListener listener;
+    private QuestionAdapter.OnAdapterInteractionListener listener;
 
     private DatabaseHelper helper;
 
     public QuestionManager (Context context, int moduleID)
     {
-        if (context instanceof OnAdapterInteractionListener)
-            listener = (OnAdapterInteractionListener) context;
+        if (context instanceof QuestionAdapter.OnAdapterInteractionListener)
+            listener = (QuestionAdapter.OnAdapterInteractionListener) context;
 
         helper = new DatabaseHelper (context);
 

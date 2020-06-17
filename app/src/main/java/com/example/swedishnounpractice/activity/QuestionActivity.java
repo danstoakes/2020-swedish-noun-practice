@@ -1,3 +1,5 @@
+/* Finalised on 17/06/2020 */
+
 package com.example.swedishnounpractice.activity;
 
 import androidx.annotation.NonNull;
@@ -21,7 +23,6 @@ import com.example.swedishnounpractice.helper.ConstantHelper;
 import com.example.swedishnounpractice.helper.DrawableHelper;
 import com.example.swedishnounpractice.dialog.ErrorDialog;
 import com.example.swedishnounpractice.layout.AnimatedSnackbar;
-import com.example.swedishnounpractice.listener.OnAdapterInteractionListener;
 import com.example.swedishnounpractice.object.Question;
 import com.example.swedishnounpractice.helper.FlagHelper;
 import com.example.swedishnounpractice.helper.PreferenceHelper;
@@ -33,7 +34,8 @@ import com.example.swedishnounpractice.helper.VibrationHelper;
 
 import java.util.List;
 
-public class QuestionActivity extends AppCompatActivity implements OnAdapterInteractionListener, AnimatedSnackbar.AnimatedSnackbarEventListener
+public class QuestionActivity extends AppCompatActivity
+        implements QuestionAdapter.OnAdapterInteractionListener, AnimatedSnackbar.AnimatedSnackbarEventListener
 {
     private QuestionManager manager;
 
@@ -102,15 +104,18 @@ public class QuestionActivity extends AppCompatActivity implements OnAdapterInte
                 playSound (manager.getCurrentQuestion().getNoun().getReferenceID(), R.string.word_sounds_key);
             }
         });
-        recyclerView.setAdapter (setupAdapter ());
+
+        QuestionAdapter adapter = setupAdapter ();
+        adapter.setAdapterInteractionListener (this);
+        recyclerView.setAdapter (adapter);
     }
 
     private QuestionAdapter setupAdapter ()
     {
         if (manager == null)
-            return new QuestionAdapter (this, setQuestions(getIntent().getIntExtra("moduleID", 0)));
+            return new QuestionAdapter (setQuestions(getIntent().getIntExtra("moduleID", 0)));
 
-        return new QuestionAdapter (this, manager.getQuestions());
+        return new QuestionAdapter (manager.getQuestions());
     }
 
     private List<Question> setQuestions (int moduleID)
@@ -124,18 +129,10 @@ public class QuestionActivity extends AppCompatActivity implements OnAdapterInte
     @Override
     public void onAdapterLoaded (int adapterPosition)
     {
-        int activityPosition = manager.getPointerLocation () + 1;
+        boolean wordSounds = PreferenceHelper.getSoundPreference(this, R.string.word_sounds_key, true);
 
-        if (activityPosition != adapterPosition)
-        {
-            onSetupError();
-        } else
-        {
-            boolean wordSounds = PreferenceHelper.getSoundPreference(this, R.string.word_sounds_key, true);
-
-            if (getQuestionNumber () == 1 && wordSounds)
-                playSound (manager.getCurrentQuestion().getNoun().getReferenceID(), R.string.word_sounds_key);
-        }
+        if (getQuestionNumber () == 1 && wordSounds)
+            playSound (manager.getCurrentQuestion().getNoun().getReferenceID(), R.string.word_sounds_key);
     }
 
     public void playSound (String soundID, int preferenceKey)

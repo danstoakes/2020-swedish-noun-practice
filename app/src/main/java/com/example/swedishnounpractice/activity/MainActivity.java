@@ -16,7 +16,6 @@ import android.view.View;
 
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.adapter.ModuleAdapter;
-import com.example.swedishnounpractice.listener.OnAdapterEventListener;
 import com.example.swedishnounpractice.object.DatabaseObject;
 import com.example.swedishnounpractice.object.Module;
 import com.example.swedishnounpractice.utility.DatabaseHelper;
@@ -25,7 +24,7 @@ import com.example.swedishnounpractice.helper.FlagHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnAdapterEventListener
+public class MainActivity extends AppCompatActivity implements ModuleAdapter.OnAdapterEventListener
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements OnAdapterEventLis
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ModuleAdapter adapter = new ModuleAdapter(this, setModules ());
+        ModuleAdapter adapter = new ModuleAdapter(setModules ());
+        adapter.setAdapterEventListener (this);
         recyclerView.setAdapter(adapter);
     }
 

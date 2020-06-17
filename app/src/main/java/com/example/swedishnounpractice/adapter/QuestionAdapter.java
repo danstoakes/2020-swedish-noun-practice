@@ -1,6 +1,7 @@
+/* Finalised on 17/06/2020 */
+
 package com.example.swedishnounpractice.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.layout.ResponsiveEditText;
-import com.example.swedishnounpractice.listener.OnAdapterEventListener;
-import com.example.swedishnounpractice.listener.OnAdapterInteractionListener;
 import com.example.swedishnounpractice.object.Question;
 
 import java.util.List;
@@ -26,11 +26,8 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
 
     private List<Question> questions;
 
-    public QuestionAdapter (Context context, List<Question> questions)
+    public QuestionAdapter (List<Question> questions)
     {
-        if (context instanceof OnAdapterInteractionListener)
-            listener = (OnAdapterInteractionListener) context;
-
         this.questions = questions;
     }
 
@@ -59,6 +56,20 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     public void setAdapterInteractionListener (OnAdapterInteractionListener listener)
     {
         this.listener = listener;
+    }
+
+    public interface OnAdapterInteractionListener extends ModuleAdapter.OnAdapterEventListener
+    {
+        @Override
+        void onAdapterItemClick(View view, int moduleID, @Nullable String text);
+
+        void onSetupError ();
+
+        void onAdapterLoaded (int position);
+
+        int getQuestionNumber ();
+
+        boolean isViewVisible (View view);
     }
 
     class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ResponsiveEditText.ValidEntryListener

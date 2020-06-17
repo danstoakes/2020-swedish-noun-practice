@@ -1,3 +1,5 @@
+/* Finalised on 17/06/2020 */
+
 package com.example.swedishnounpractice.layout;
 
 import android.view.View;
@@ -100,15 +102,16 @@ public class AnimatedSnackbar implements Animation.AnimationListener, View.OnCli
 
     public void moveDown (int length)
     {
-        isUp = false;
-
         view.postDelayed(new Runnable ()
         {
             @Override
             public void run ()
             {
-                if (!isDialogShowing)
-                    view.startAnimation (moveDown);
+                if (!isDialogShowing && isUp)
+                {
+                    view.startAnimation(moveDown);
+                    isUp = false;
+                }
             }
         }, length);
     }

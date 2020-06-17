@@ -1,3 +1,5 @@
+/* Finalised on 14/06/2020 */
+
 package com.example.swedishnounpractice.dialog;
 
 import android.app.Activity;

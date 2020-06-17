@@ -1,3 +1,5 @@
+/* Finalised on 15/06/2020 */
+
 package com.example.swedishnounpractice.activity;
 
 import android.content.Intent;
