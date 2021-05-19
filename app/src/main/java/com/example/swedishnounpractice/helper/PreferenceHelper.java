@@ -25,28 +25,28 @@ public class PreferenceHelper
 
     public static String getStringPreference (Context context, int key, String defValue)
     {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (context);
 
-        String keyString = context.getString(key);
+        String keyString = context.getString (key);
 
         if (preferences != null)
-            return preferences.getString(keyString, defValue);
+            return preferences.getString (keyString, defValue);
 
         return defValue;
     }
 
     public static boolean getSoundPreference (Context context, int key, boolean defValue)
     {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (context);
 
-        String keyString = context.getString(key);
+        String keyString = context.getString (key);
 
         if (preferences != null)
         {
-            boolean soundsPreference = preferences.getBoolean(
+            boolean soundsPreference = preferences.getBoolean (
                     context.getString(R.string.sounds_key), true);
 
-            return soundsPreference && preferences.getBoolean(keyString, defValue);
+            return soundsPreference && preferences.getBoolean (keyString, defValue);
         }
         return defValue;
     }

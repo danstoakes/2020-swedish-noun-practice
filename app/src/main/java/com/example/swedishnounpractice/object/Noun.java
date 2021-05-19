@@ -78,10 +78,10 @@ public class Noun implements DatabaseObject, Parcelable
     {
         String queryString = "SELECT * FROM Noun WHERE ModuleID = ? ORDER BY Weight DESC LIMIT %d";
 
-        String questionPreference = PreferenceHelper.getStringPreference(
+        String questionPreference = PreferenceHelper.getStringPreference (
                 context, R.string.question_number_key, "20");
 
-        return String.format(Locale.getDefault(), queryString, Integer.parseInt(questionPreference) / 2);
+        return String.format (Locale.getDefault (), queryString, Integer.parseInt (questionPreference) / 2);
     }
 
     @Override
@@ -93,9 +93,9 @@ public class Noun implements DatabaseObject, Parcelable
     @Override
     public ContentValues getUpdateValues ()
     {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("Weight", weight);
-        contentValues.put("Seen", 1);
+        ContentValues contentValues = new ContentValues ();
+        contentValues.put ("Weight", weight);
+        contentValues.put ("Seen", 1);
 
         return contentValues;
     }

@@ -19,32 +19,32 @@ import com.example.swedishnounpractice.activity.MainActivity;
 
 public class ErrorDialog extends Dialog implements View.OnClickListener
 {
-    public ErrorDialog(@NonNull Context context)
+    public ErrorDialog (@NonNull Context context)
     {
-        super(context);
+        super (context);
 
-        setOwnerActivity((Activity) context);
+        setOwnerActivity ((Activity) context);
 
-        Window window = super.getWindow();
+        Window window = super.getWindow ();
 
         if (window != null)
-            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setBackgroundDrawable (new ColorDrawable (Color.TRANSPARENT));
 
-        super.setContentView(R.layout.activity_error_dialog);
-        super.setCancelable(false);
+        super.setContentView (R.layout.activity_error_dialog);
+        super.setCancelable (false);
 
-        Button button = findViewById(R.id.buttonRetry);
-        button.setOnClickListener(this);
+        Button button = findViewById (R.id.buttonRetry);
+        button.setOnClickListener (this);
     }
 
     @Override
-    public void onClick(View v)
+    public void onClick (View v)
     {
-        dismiss();
+        dismiss ();
 
-        Intent intent = new Intent(getOwnerActivity(), MainActivity.class);
+        Intent intent = new Intent(getOwnerActivity (), MainActivity.class);
 
-        if (getOwnerActivity() != null)
-            getOwnerActivity().startActivity(intent);
+        if (getOwnerActivity () != null)
+            getOwnerActivity ().startActivity (intent);
     }
 }

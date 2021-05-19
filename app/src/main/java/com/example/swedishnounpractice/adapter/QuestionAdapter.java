@@ -61,7 +61,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     public interface OnAdapterInteractionListener extends ModuleAdapter.OnAdapterEventListener
     {
         @Override
-        void onAdapterItemClick(View view, int moduleID, @Nullable String text);
+        void onAdapterItemClick (View view, int moduleID, @Nullable String text);
 
         void onSetupError ();
 

@@ -28,9 +28,9 @@ public class QuestionManager implements Parcelable
 
     private int moduleID;
 
-    private QuestionAdapter.OnAdapterInteractionListener listener;
-
     private DatabaseHelper helper;
+
+    private QuestionAdapter.OnAdapterInteractionListener listener;
 
     public QuestionManager (Context context, int moduleID)
     {
@@ -39,8 +39,8 @@ public class QuestionManager implements Parcelable
 
         helper = new DatabaseHelper (context);
 
-        this.questions = new ArrayList<>();
-        incorrect = new ArrayList<>();
+        questions = new ArrayList<> ();
+        incorrect = new ArrayList<> ();
 
         pointer = 0;
 
@@ -52,21 +52,21 @@ public class QuestionManager implements Parcelable
         Noun placeholder = new Noun (
                 0, moduleID, null, null, null, null);
 
-        List<DatabaseObject> nounObjects = helper.getList(placeholder);
+        List<DatabaseObject> nounObjects = helper.getList (placeholder);
 
-        if (nounObjects.size() == 0)
+        if (nounObjects.size () == 0)
         {
             listener.onSetupError ();
         } else
         {
-            for (int i = 0; i < nounObjects.size(); i++)
+            for (int i = 0; i < nounObjects.size (); i++)
             {
-                Noun noun = ((Noun) nounObjects.get(i));
+                Noun noun = ((Noun) nounObjects.get (i));
 
-                questions.add (new Question(noun, noun.getEnglish(), noun.getSwedish(), true));
-                questions.add (new Question(noun, noun.getSwedish(), noun.getEnglish(), false));
+                questions.add (new Question (noun, noun.getEnglish (), noun.getSwedish (), true));
+                questions.add (new Question (noun, noun.getSwedish (), noun.getEnglish (), false));
             }
-            Collections.shuffle(questions);
+            Collections.shuffle (questions);
         }
     }
 
@@ -77,7 +77,7 @@ public class QuestionManager implements Parcelable
 
         Module module = new Module (getCurrentQuestion().getNoun().getModuleID());
 
-        double averageWeight = helper.getModuleWeight(module);
+        double averageWeight = helper.getModuleWeight (module);
 
         String difficulty = "Easy";
         if (averageWeight > 0 && averageWeight < 0.2)
@@ -88,7 +88,7 @@ public class QuestionManager implements Parcelable
             difficulty = "Hard";
         }
 
-        module.setDifficulty(difficulty);
+        module.setDifficulty (difficulty);
 
         helper.update (module);
     }
@@ -101,7 +101,12 @@ public class QuestionManager implements Parcelable
     public void setIncorrectWeight ()
     {
         getCurrentQuestion().getNoun().setWeight (INCORRECT_WEIGHT);
-        setIncorrect (getCurrentQuestion());
+        setIncorrect (getCurrentQuestion ());
+    }
+
+    public void setAdditionalWeight (double weight)
+    {
+        getCurrentQuestion().getNoun().setWeight (weight);
     }
 
     public void setIncorrect (Question question)
@@ -119,6 +124,11 @@ public class QuestionManager implements Parcelable
         return incorrect.size ();
     }
 
+    public List<Question> getQuestions ()
+    {
+        return questions;
+    }
+
     public int getPointerLocation ()
     {
         return pointer;
@@ -127,11 +137,6 @@ public class QuestionManager implements Parcelable
     public Question getCurrentQuestion ()
     {
         return questions.get (pointer);
-    }
-
-    public List<Question> getQuestions ()
-    {
-        return questions;
     }
 
     public void loadNextQuestion ()
@@ -144,7 +149,7 @@ public class QuestionManager implements Parcelable
         if (in.readByte() == 0x01)
         {
             questions = new ArrayList<> ();
-            in.readList (questions, Question.class.getClassLoader());
+            in.readList (questions, Question.class.getClassLoader ());
         } else
         {
             questions = null;
@@ -153,12 +158,12 @@ public class QuestionManager implements Parcelable
         if (in.readByte() == 0x01)
         {
             incorrect = new ArrayList<> ();
-            in.readList(incorrect, Question.class.getClassLoader());
+            in.readList(incorrect, Question.class.getClassLoader ());
         } else
         {
             incorrect = null;
         }
-        pointer = in.readInt();
+        pointer = in.readInt ();
     }
 
     @Override
@@ -172,22 +177,22 @@ public class QuestionManager implements Parcelable
     {
         if (questions == null)
         {
-            dest.writeByte((byte) (0x00));
+            dest.writeByte ((byte) (0x00));
         } else
         {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(questions);
+            dest.writeByte ((byte) (0x01));
+            dest.writeList (questions);
         }
 
         if (incorrect == null)
         {
-            dest.writeByte((byte) (0x00));
+            dest.writeByte ((byte) (0x00));
         } else
         {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(incorrect);
+            dest.writeByte ((byte) (0x01));
+            dest.writeList (incorrect);
         }
-        dest.writeInt(pointer);
+        dest.writeInt (pointer);
     }
 
     public static final Parcelable.Creator<QuestionManager> CREATOR = new Parcelable.Creator<QuestionManager> ()

@@ -27,63 +27,63 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements ModuleAdapter.OnAdapterEventListener
 {
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate (Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        setTitle(R.string.main_header);
+        super.onCreate (savedInstanceState);
+        setContentView (R.layout.activity_main);
+        setTitle (R.string.main_header);
 
-        FlagHelper.setFlags(this);
+        FlagHelper.setFlags (this);
 
-        initialise();
+        initialise ();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    public boolean onCreateOptionsMenu (Menu menu)
     {
-        getMenuInflater().inflate(R.menu.action_settings, menu);
+        getMenuInflater ().inflate(R.menu.action_settings, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    public boolean onOptionsItemSelected (@NonNull MenuItem item)
     {
-        if (item.getItemId() == R.id.action_settings)
+        if (item.getItemId () == R.id.action_settings)
         {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
+            Intent intent = new Intent (MainActivity.this, SettingsActivity.class);
+            startActivity (intent);
 
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected (item);
     }
 
     private void initialise ()
     {
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView recyclerView = findViewById (R.id.recyclerView);
+        recyclerView.setLayoutManager (new LinearLayoutManager (this));
 
-        ModuleAdapter adapter = new ModuleAdapter(setModules ());
+        ModuleAdapter adapter = new ModuleAdapter (setModules ());
         adapter.setAdapterEventListener (this);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter (adapter);
     }
 
     public List<Module> setModules ()
     {
-        List<Module> modules = new ArrayList<>();
+        List<Module> modules = new ArrayList<> ();
 
-        DatabaseHelper helper = new DatabaseHelper(this.getApplicationContext());
+        DatabaseHelper helper = new DatabaseHelper (this.getApplicationContext ());
 
         Module placeholder = new Module (0, null, null, null);
 
-        for (DatabaseObject object : helper.getList(placeholder))
+        for (DatabaseObject object : helper.getList (placeholder))
         {
             Module module = (Module) object;
 
             double percentage = ((double) helper.getNounCount(module, 1)) / helper.getNounCount(module, 0);
             module.setPercentageComplete((int) Math.round(percentage * 100));
 
-            modules.add(module);
+            modules.add (module);
         }
         return modules;
     }
@@ -91,12 +91,12 @@ public class MainActivity extends AppCompatActivity implements ModuleAdapter.OnA
     @Override
     public void onAdapterItemClick(View view, int moduleID, @Nullable String text)
     {
-        if (view.getId() == R.id.buttonStart)
+        if (view.getId () == R.id.buttonStart)
         {
-            Intent questionIntent = new Intent(MainActivity.this, QuestionActivity.class)
-                    .putExtra("moduleID", moduleID);
+            Intent questionIntent = new Intent (MainActivity.this, QuestionActivity.class)
+                    .putExtra ("moduleID", moduleID);
 
-            startActivity(questionIntent);
+            startActivity (questionIntent);
         }
     }
 }

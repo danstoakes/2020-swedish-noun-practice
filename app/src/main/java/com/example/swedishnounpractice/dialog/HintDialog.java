@@ -21,48 +21,48 @@ public class HintDialog extends Dialog implements View.OnClickListener
 {
     public HintDialog (@NonNull Context context)
     {
-        super(context);
+        super (context);
 
-        setOwnerActivity((Activity) context);
+        setOwnerActivity ((Activity) context);
 
-        Window window = super.getWindow();
+        Window window = super.getWindow ();
 
         if (window != null)
-            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setBackgroundDrawable (new ColorDrawable (Color.TRANSPARENT));
 
-        super.setContentView(R.layout.activity_hint_dialog);
-        super.setCancelable(true);
+        super.setContentView (R.layout.activity_hint_dialog);
+        super.setCancelable (true);
 
-        Button buttonDismiss = findViewById(R.id.buttonDismiss);
-        buttonDismiss.setOnClickListener(this);
+        Button buttonDismiss = findViewById (R.id.buttonDismiss);
+        buttonDismiss.setOnClickListener (this);
     }
 
     public void setAttributes (Question question)
     {
-        Context context = getOwnerActivity();
+        Context context = getOwnerActivity ();
 
-        String english = question.getQuestion();
-        String swedish = question.getAnswer();
-        if (!question.isToSwedish())
+        String english = question.getQuestion ();
+        String swedish = question.getAnswer ();
+        if (!question.isToSwedish ())
         {
-            english = question.getAnswer();
-            swedish = question.getQuestion();
+            english = question.getAnswer ();
+            swedish = question.getQuestion ();
         }
 
         if (context != null)
         {
-            TextView englishHint = findViewById(R.id.textEnglish);
-            TextView swedishHint = findViewById(R.id.textSwedish);
+            TextView englishHint = findViewById (R.id.textEnglish);
+            TextView swedishHint = findViewById (R.id.textSwedish);
 
-            englishHint.setText(context.getString(R.string.app_hint_english, english));
-            swedishHint.setText(context.getString(R.string.app_hint_swedish, swedish));
+            englishHint.setText (context.getString(R.string.app_hint_english, english));
+            swedishHint.setText (context.getString(R.string.app_hint_swedish, swedish));
         }
     }
 
     @Override
     public void onClick (View v)
     {
-        if (v.getId() == R.id.buttonDismiss)
-            dismiss();
+        if (v.getId () == R.id.buttonDismiss)
+            dismiss ();
     }
 }

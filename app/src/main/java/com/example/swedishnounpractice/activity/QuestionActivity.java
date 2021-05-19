@@ -44,29 +44,29 @@ public class QuestionActivity extends AppCompatActivity
     @Override
     public void onCreate (@Nullable Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-        setTheme(R.style.AppTheme_NoBar);
-        setContentView(R.layout.activity_question);
+        super.onCreate (savedInstanceState);
+        setTheme (R.style.AppTheme_NoBar);
+        setContentView (R.layout.activity_question);
 
         if (savedInstanceState != null)
-            manager = savedInstanceState.getParcelable("questionManager");
+            manager = savedInstanceState.getParcelable ("questionManager");
 
-        FlagHelper.setFlags(this);
+        FlagHelper.setFlags (this);
 
-        initialise();
+        initialise ();
     }
 
     @Override
     protected void onSaveInstanceState (@NonNull Bundle outState)
     {
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState (outState);
         outState.putParcelable ("questionManager", manager);
     }
 
     @Override
     protected void onRestoreInstanceState (@NonNull Bundle savedInstanceState)
     {
-        super.onRestoreInstanceState(savedInstanceState);
+        super.onRestoreInstanceState (savedInstanceState);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class QuestionActivity extends AppCompatActivity
 
     private void initialise ()
     {
-        if (getIntent().getIntExtra ("moduleID", 0) == 0)
+        if (getIntent ().getIntExtra ("moduleID", 0) == 0)
         {
             onSetupError ();
         } else
@@ -91,17 +91,17 @@ public class QuestionActivity extends AppCompatActivity
 
     private void setupView ()
     {
-        ScrollingRecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new ScrollingLayoutManager(
+        ScrollingRecyclerView recyclerView = findViewById (R.id.recyclerView);
+        recyclerView.setLayoutManager (new ScrollingLayoutManager (
                 this, LinearLayoutManager.HORIZONTAL, false, false));
-        recyclerView.setScrollCompletedListener(new ScrollingRecyclerView.ScrollCompletedListener()
+        recyclerView.setScrollCompletedListener (new ScrollingRecyclerView.ScrollCompletedListener ()
         {
             @Override
             public void onScrollCompleted ()
             {
                 FlagHelper.setRotationUnlocked (QuestionActivity.this);
 
-                playSound (manager.getCurrentQuestion().getNoun().getReferenceID(), R.string.word_sounds_key);
+                playSound (manager.getCurrentQuestion ().getNoun().getReferenceID(), R.string.word_sounds_key);
             }
         });
 
@@ -113,9 +113,9 @@ public class QuestionActivity extends AppCompatActivity
     private QuestionAdapter setupAdapter ()
     {
         if (manager == null)
-            return new QuestionAdapter (setQuestions(getIntent().getIntExtra("moduleID", 0)));
+            return new QuestionAdapter (setQuestions(getIntent ().getIntExtra ("moduleID", 0)));
 
-        return new QuestionAdapter (manager.getQuestions());
+        return new QuestionAdapter (manager.getQuestions ());
     }
 
     private List<Question> setQuestions (int moduleID)
@@ -132,21 +132,7 @@ public class QuestionActivity extends AppCompatActivity
         boolean wordSounds = PreferenceHelper.getSoundPreference(this, R.string.word_sounds_key, true);
 
         if (getQuestionNumber () == 1 && wordSounds)
-            playSound (manager.getCurrentQuestion().getNoun().getReferenceID(), R.string.word_sounds_key);
-    }
-
-    public void playSound (String soundID, int preferenceKey)
-    {
-        if (PreferenceHelper.getSoundPreference(this, preferenceKey, ConstantHelper.SOUND_DEFAULT))
-        {
-            try
-            {
-                player.playSound (DrawableHelper.getResource(soundID, false));
-            } catch (Resources.NotFoundException e)
-            {
-                Toast.makeText(this, "Error playing sound", Toast.LENGTH_SHORT).show();
-            }
-        }
+            playSound (manager.getCurrentQuestion ().getNoun().getReferenceID(), R.string.word_sounds_key);
     }
 
     @Override
@@ -155,12 +141,14 @@ public class QuestionActivity extends AppCompatActivity
         switch (view.getId ())
         {
             case R.id.imagePlay :
-                playSound (manager.getCurrentQuestion().getNoun().getReferenceID(), R.string.word_sounds_key);
+                playSound (manager.getCurrentQuestion ().getNoun().getReferenceID(), R.string.word_sounds_key);
                 break;
             case R.id.imageHint:
+                manager.setAdditionalWeight (ConstantHelper.UNHAPPY);
+
                 HintDialog dialog = new HintDialog (this);
-                dialog.setAttributes (manager.getCurrentQuestion());
-                dialog.show();
+                dialog.setAttributes (manager.getCurrentQuestion ());
+                dialog.show ();
                 break;
             case R.id.buttonSubmit :
                 handleUserInput (text);
@@ -168,11 +156,25 @@ public class QuestionActivity extends AppCompatActivity
         }
     }
 
+    public void playSound (String soundID, int preferenceKey)
+    {
+        if (PreferenceHelper.getSoundPreference (this, preferenceKey, ConstantHelper.SOUND_DEFAULT))
+        {
+            try
+            {
+                player.playSound (DrawableHelper.getResource (soundID, false));
+            } catch (Resources.NotFoundException e)
+            {
+                Toast.makeText(this, "Error playing sound", Toast.LENGTH_SHORT).show ();
+            }
+        }
+    }
+
     private void handleUserInput (String answer)
     {
         FlagHelper.setRotationLocked (this);
 
-        int code = CheckAnswerHelper.evaluateAnswer(answer, manager.getCurrentQuestion().getAnswer());
+        int code = CheckAnswerHelper.evaluateAnswer (answer, manager.getCurrentQuestion().getAnswer());
 
         if (code == ConstantHelper.CORRECT || code == ConstantHelper.CORRECT_TYPO)
         {
@@ -183,7 +185,7 @@ public class QuestionActivity extends AppCompatActivity
             manager.setIncorrectWeight ();
             playSound ("incorrect", R.string.error_sounds_key);
         }
-        VibrationHelper.vibrate(this, true, code);
+        VibrationHelper.vibrate (this, true, code);
 
         handleOutput (code);
     }
@@ -217,19 +219,19 @@ public class QuestionActivity extends AppCompatActivity
     {
         if (!dialogShowing)
         {
-            if (manager.getPointerLocation() == manager.getQuestionsSize() - 1)
+            if (manager.getPointerLocation () == manager.getQuestionsSize () - 1)
             {
                 manager.finalise ();
 
-                Intent resultIntent = new Intent(QuestionActivity.this, ResultActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        .putExtra("score", (manager.getQuestionsSize() - manager.getIncorrectSize()))
-                        .putExtra("total", manager.getQuestionsSize());
+                Intent resultIntent = new Intent (QuestionActivity.this, ResultActivity.class)
+                        .addFlags (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        .putExtra ("score", (manager.getQuestionsSize() - manager.getIncorrectSize ()))
+                        .putExtra ("total", manager.getQuestionsSize());
 
-                startActivity(resultIntent);
+                startActivity (resultIntent);
             } else
             {
-                moveToNextQuestion();
+                moveToNextQuestion ();
             }
         }
     }
@@ -240,12 +242,12 @@ public class QuestionActivity extends AppCompatActivity
 
         ScrollingRecyclerView recyclerView = findViewById(R.id.recyclerView);
 
-        ScrollingLayoutManager layoutManager = (ScrollingLayoutManager) recyclerView.getLayoutManager();
+        ScrollingLayoutManager layoutManager = (ScrollingLayoutManager) recyclerView.getLayoutManager ();
 
         if (layoutManager != null)
-            layoutManager.setHorizontalScrollEnabled(true);
+            layoutManager.setHorizontalScrollEnabled (true);
 
-        recyclerView.smoothScrollBy(getResources().getDisplayMetrics().widthPixels, 0);
+        recyclerView.smoothScrollBy (getResources ().getDisplayMetrics().widthPixels, 0);
     }
 
     @Override
@@ -282,12 +284,13 @@ public class QuestionActivity extends AppCompatActivity
         animatedSnackbar.setDialogShowing (true);
 
         FeedbackDialog dialog = new FeedbackDialog (QuestionActivity.this);
-        dialog.setHeader (manager.getCurrentQuestion().getAnswer());
-        dialog.setOnDialogOptionSelectedListener(new FeedbackDialog.DialogOptionSelectedListener ()
+        dialog.setHeader (manager.getCurrentQuestion ().getAnswer());
+        dialog.setOnDialogOptionSelectedListener (new FeedbackDialog.DialogOptionSelectedListener ()
         {
             @Override
             public void onDialogOptionSelected (double weight)
             {
+                manager.setAdditionalWeight (weight);
                 animatedSnackbar.setDialogShowing (false);
                 animatedSnackbar.moveDown (AnimatedSnackbar.DIALOG_INTERIM);
             }

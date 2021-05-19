@@ -21,32 +21,32 @@ public class SettingsActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        super.onCreate (savedInstanceState);
+        setContentView (R.layout.activity_settings);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.settings, new SettingsFragment ())
-                .commit();
+        getSupportFragmentManager ()
+                .beginTransaction ()
+                .replace (R.id.settings, new SettingsFragment ())
+                .commit ();
 
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar ();
         if (actionBar != null)
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled (true);
 
-        FlagHelper.setFlags(this);
+        FlagHelper.setFlags (this);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    public boolean onOptionsItemSelected (@NonNull MenuItem item)
     {
-        if (item.getItemId() == android.R.id.home)
+        if (item.getItemId () == android.R.id.home)
         {
-            Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+            Intent intent = new Intent (SettingsActivity.this, MainActivity.class);
             startActivity (intent);
 
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected (item);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
@@ -58,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity
         }
 
         @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
+        public void onSharedPreferenceChanged (SharedPreferences sharedPreferences, String key)
         {
             String vibrateKey = getString(R.string.vibration_key);
 
@@ -70,18 +70,18 @@ public class SettingsActivity extends AppCompatActivity
         }
 
         @Override
-        public void onResume()
+        public void onResume ()
         {
-            super.onResume();
+            super.onResume ();
             getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         }
 
         @Override
-        public void onPause()
+        public void onPause ()
         {
             getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-            super.onPause();
+            super.onPause ();
         }
     }
 }

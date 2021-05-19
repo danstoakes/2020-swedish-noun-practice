@@ -24,11 +24,12 @@ public class AnimatedSnackbar implements Animation.AnimationListener, View.OnCli
     private Animation moveUp;
     private Animation moveDown;
 
-    private boolean isUp;
-    private boolean hasAction;
-    private boolean isDialogShowing;
+    private boolean up;
+    private boolean action;
+    private boolean dialogShowing;
 
     private String text;
+
     private int colour;
     private int length;
 
@@ -38,79 +39,79 @@ public class AnimatedSnackbar implements Animation.AnimationListener, View.OnCli
     {
         this.view = view;
         this.text = text;
-        this.colour = ContextCompat.getColor(view.getContext(), colour);
+        this.colour = ContextCompat.getColor (view.getContext (), colour);
         this.length = length;
 
-        moveUp = AnimationUtils.loadAnimation(view.getContext(), R.anim.move_up);
-        moveDown = AnimationUtils.loadAnimation(view.getContext(), R.anim.move_down);
+        moveUp = AnimationUtils.loadAnimation (view.getContext (), R.anim.move_up);
+        moveDown = AnimationUtils.loadAnimation (view.getContext (), R.anim.move_down);
 
-        moveUp.setAnimationListener(this);
-        moveDown.setAnimationListener(this);
+        moveUp.setAnimationListener (this);
+        moveDown.setAnimationListener (this);
 
-        isUp = false;
-        hasAction = false;
+        up = false;
+        action = false;
     }
 
-    public void setAction(boolean hasAction)
+    public void setAction (boolean action)
     {
-        this.hasAction = hasAction;
+        this.action = action;
     }
 
-    public void setEventListener(AnimatedSnackbarEventListener listener)
+    public void setDialogShowing (boolean dialogShowing)
+    {
+        this.dialogShowing = dialogShowing;
+    }
+
+    private void setActionVisibility (int visible)
+    {
+        Button button = view.findViewById (R.id.buttonShow);
+        button.setVisibility (visible);
+    }
+
+    public void setEventListener (AnimatedSnackbarEventListener listener)
     {
         this.listener = listener;
     }
 
-    public void setDialogShowing (boolean isDialogShowing)
-    {
-        this.isDialogShowing = isDialogShowing;
-    }
-
     public boolean isDialogShowing ()
     {
-        return isDialogShowing;
+        return dialogShowing;
     }
 
     public void show ()
     {
-        if (!isUp)
+        if (!up)
         {
-            isUp = true;
+            up = true;
 
             ((CardView) view).setCardBackgroundColor (colour);
 
-            TextView textView = view.findViewById(R.id.textLabel);
+            TextView textView = view.findViewById (R.id.textLabel);
             textView.setText (text);
 
-            if (hasAction)
+            if (action)
             {
-                Button button = view.findViewById(R.id.buttonShow);
+                Button button = view.findViewById (R.id.buttonShow);
                 button.setOnClickListener (this);
                 setActionVisibility (View.VISIBLE);
             }
 
             view.setVisibility (View.VISIBLE);
-            view.startAnimation(moveUp);
+            view.startAnimation (moveUp);
         }
-    }
-
-    private void setActionVisibility (int visible)
-    {
-        Button button = view.findViewById(R.id.buttonShow);
-        button.setVisibility (visible);
     }
 
     public void moveDown (int length)
     {
-        view.postDelayed(new Runnable ()
+        view.postDelayed (new Runnable ()
         {
             @Override
             public void run ()
             {
-                if (!isDialogShowing && isUp)
+                if (!dialogShowing && up)
                 {
-                    view.startAnimation(moveDown);
-                    isUp = false;
+                    view.startAnimation (moveDown);
+                    up = false;
                 }
             }
         }, length);
@@ -122,7 +123,7 @@ public class AnimatedSnackbar implements Animation.AnimationListener, View.OnCli
     @Override
     public void onAnimationEnd (Animation animation)
     {
-        if (isUp)
+        if (up)
         {
             moveDown (length);
         } else
@@ -138,7 +139,7 @@ public class AnimatedSnackbar implements Animation.AnimationListener, View.OnCli
     public void onAnimationRepeat (Animation animation) { }
 
     @Override
-    public void onClick(View v)
+    public void onClick (View v)
     {
         listener.onActionItemClick (this);
     }

@@ -24,20 +24,20 @@ public class VibrationHelper
             length = INCORRECT_LENGTH;
 
         if (preferenceDependent)
-            canVibrate = PreferenceHelper.getStandardPreference(
+            canVibrate = PreferenceHelper.getStandardPreference (
                     context, R.string.vibration_key, false);
 
         if (canVibrate || !preferenceDependent)
         {
-            Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            Vibrator vibrator = (Vibrator) context.getSystemService (Context.VIBRATOR_SERVICE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             {
-                vibrator.vibrate(
-                        VibrationEffect.createOneShot(length, VibrationEffect.DEFAULT_AMPLITUDE));
+                vibrator.vibrate (
+                        VibrationEffect.createOneShot (length, VibrationEffect.DEFAULT_AMPLITUDE));
             } else
             {
-                vibrator.vibrate(length);
+                vibrator.vibrate (length);
             }
         }
     }

@@ -12,26 +12,18 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
-public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditText implements View.OnFocusChangeListener
+public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditText
+        implements View.OnFocusChangeListener
 {
-    private ValidEntryListener listener;
     private KeyListener keyListener;
+
+    private ValidEntryListener listener;
 
     public ResponsiveEditText (Context context, AttributeSet attrs)
     {
         super (context, attrs);
 
         keyListener = getKeyListener ();
-    }
-
-    public interface ValidEntryListener
-    {
-        void onValidEntryAdded (boolean enabled);
-    }
-
-    public void setValidEntryListener (ValidEntryListener listener)
-    {
-        this.listener = listener;
     }
 
     public void setProperties ()
@@ -62,6 +54,11 @@ public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditT
         });
     }
 
+    private void setKeyboardVisible ()
+    {
+        post (showKeyboardRunnable);
+    }
+
     @Override
     public void setEnabled (boolean enabled)
     {
@@ -72,6 +69,11 @@ public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditT
             setKeyListener (null);
         // this method normally causes the keyboard to disappear on disable (line 228)
         // https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/widget/TextView.java
+    }
+
+    public void setValidEntryListener (ValidEntryListener listener)
+    {
+        this.listener = listener;
     }
 
     @Override
@@ -93,8 +95,8 @@ public class ResponsiveEditText extends androidx.appcompat.widget.AppCompatEditT
         }
     };
 
-    private void setKeyboardVisible ()
+    public interface ValidEntryListener
     {
-        post (showKeyboardRunnable);
+        void onValidEntryAdded (boolean enabled);
     }
 }

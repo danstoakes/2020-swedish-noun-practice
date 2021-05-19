@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.swedishnounpractice.R;
+import com.example.swedishnounpractice.helper.ConstantHelper;
 
 public class FeedbackDialog extends Dialog implements View.OnClickListener, Dialog.OnDismissListener
 {
@@ -25,27 +26,27 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
 
     public FeedbackDialog (@NonNull Context context)
     {
-        super(context);
+        super (context);
 
-        setOwnerActivity((Activity) context);
+        setOwnerActivity ((Activity) context);
 
-        Window window = super.getWindow();
+        Window window = super.getWindow ();
 
         if (window != null)
-            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setBackgroundDrawable (new ColorDrawable (Color.TRANSPARENT));
 
-        super.setContentView(R.layout.activity_feedback_dialog);
-        super.setCancelable(false);
+        super.setContentView (R.layout.activity_feedback_dialog);
+        super.setCancelable (false);
 
-        ImageButton buttonSad = findViewById(R.id.buttonSad);
-        ImageButton buttonNeutral = findViewById(R.id.buttonNeutral);
-        ImageButton buttonHappy = findViewById(R.id.buttonHappy);
+        ImageButton buttonSad = findViewById (R.id.buttonSad);
+        ImageButton buttonNeutral = findViewById (R.id.buttonNeutral);
+        ImageButton buttonHappy = findViewById (R.id.buttonHappy);
 
-        buttonSad.setOnClickListener(this);
-        buttonNeutral.setOnClickListener(this);
-        buttonHappy.setOnClickListener(this);
+        buttonSad.setOnClickListener (this);
+        buttonNeutral.setOnClickListener (this);
+        buttonHappy.setOnClickListener (this);
 
-        setOnDismissListener(this);
+        setOnDismissListener (this);
     }
 
     public Activity getActivity ()
@@ -55,8 +56,8 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
 
     public void setHeader (String header)
     {
-        TextView textView = findViewById(R.id.textAnswerHeader);
-        textView.setText(getActivity().getString(R.string.app_feedback_header, header));
+        TextView textView = findViewById (R.id.textAnswerHeader);
+        textView.setText (getActivity().getString(R.string.app_feedback_header, header));
     }
 
     public void setOnDialogOptionSelectedListener (DialogOptionSelectedListener listener)
@@ -64,34 +65,34 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener, Dial
         this.listener = listener;
     }
 
-    public interface DialogOptionSelectedListener
-    {
-        void onDialogOptionSelected (double weight);
-    }
-
     @Override
     public void onClick (View v)
     {
-        switch (v.getId())
+        switch (v.getId ())
         {
             case R.id.buttonSad:
-                weight = 0.2;
-                dismiss();
+                weight = ConstantHelper.UNHAPPY;
+                dismiss ();
                 break;
             case R.id.buttonNeutral:
-                weight = 0.1;
-                dismiss();
+                weight = ConstantHelper.MIXED;
+                dismiss ();
                 break;
             case R.id.buttonHappy:
-                weight = 0.05;
-                dismiss();
+                weight = ConstantHelper.HAPPY;
+                dismiss ();
                 break;
         }
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog)
+    public void onDismiss (DialogInterface dialog)
     {
         listener.onDialogOptionSelected (weight);
+    }
+
+    public interface DialogOptionSelectedListener
+    {
+        void onDialogOptionSelected (double weight);
     }
 }

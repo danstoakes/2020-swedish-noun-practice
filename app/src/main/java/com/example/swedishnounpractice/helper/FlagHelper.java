@@ -18,11 +18,11 @@ public class FlagHelper
 
         if (currentNightMode == Configuration.UI_MODE_NIGHT_YES)
         {
-            activity.getWindow().clearFlags(
+            activity.getWindow().clearFlags (
                     View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
         } else
         {
-            activity.getWindow().getDecorView().setSystemUiVisibility(
+            activity.getWindow().getDecorView().setSystemUiVisibility (
                     View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
         }
     }
@@ -31,13 +31,13 @@ public class FlagHelper
     {
         Activity activity = (Activity) context;
 
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+        activity.setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LOCKED);
     }
 
     public static void setRotationUnlocked (Context context)
     {
         Activity activity = (Activity) context;
 
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+        activity.setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_USER);
     }
 }

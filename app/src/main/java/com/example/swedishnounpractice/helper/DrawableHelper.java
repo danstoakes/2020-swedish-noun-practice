@@ -18,7 +18,7 @@ public class DrawableHelper
             return R.raw.class.getField(stringID).getInt(null);
         } catch (NoSuchFieldException | IllegalAccessException | Resources.NotFoundException e)
         {
-            e.printStackTrace();
+            e.printStackTrace ();
         }
 
         return -1;

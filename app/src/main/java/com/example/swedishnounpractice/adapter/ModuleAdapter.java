@@ -18,6 +18,7 @@ import com.example.swedishnounpractice.R;
 import com.example.swedishnounpractice.helper.DrawableHelper;
 import com.example.swedishnounpractice.object.Module;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHolder>
@@ -85,11 +86,16 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHold
 
         private void setAttributes (final Module module)
         {
+            List<String> noImage = Arrays.asList("module_11", "module_12", "module_13", "module_14");
+
             bar.setProgress (module.getPercentageComplete ());
             name.setText (module.getName ());
             difficulty.setText (module.getDifficulty ());
 
-            int imageID = DrawableHelper.getResource ("ic_" + module.getReferenceID(), true);
+            int imageID = DrawableHelper.getResource ("ic_module_no_image", true);
+            if (!noImage.contains(module.getReferenceID()))
+                imageID = DrawableHelper.getResource (
+                        "ic_" + module.getReferenceID (), true);
 
             if (imageID != -1)
                 image.setImageResource (imageID);
@@ -99,7 +105,7 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHold
                 @Override
                 public void onClick(View v)
                 {
-                    listener.onAdapterItemClick (v, module.getModuleID(), null);
+                    listener.onAdapterItemClick (v, module.getModuleID (), null);
                 }
             });
         }

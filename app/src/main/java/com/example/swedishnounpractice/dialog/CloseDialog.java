@@ -17,42 +17,42 @@ import com.example.swedishnounpractice.R;
 
 public class CloseDialog extends Dialog implements View.OnClickListener
 {
-    public CloseDialog(@NonNull Context context)
+    public CloseDialog (@NonNull Context context)
     {
-        super(context);
+        super (context);
 
-        setOwnerActivity((Activity) context);
+        setOwnerActivity ((Activity) context);
 
-        Window window = super.getWindow();
+        Window window = super.getWindow ();
 
         if (window != null)
-            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setBackgroundDrawable (new ColorDrawable (Color.TRANSPARENT));
 
-        super.setContentView(R.layout.activity_close_dialog);
-        super.setCancelable(true);
+        super.setContentView (R.layout.activity_close_dialog);
+        super.setCancelable (true);
 
-        Button buttonNo = findViewById(R.id.buttonNo);
-        Button buttonYes = findViewById(R.id.buttonYes);
+        Button buttonNo = findViewById (R.id.buttonNo);
+        Button buttonYes = findViewById (R.id.buttonYes);
 
-        buttonNo.setOnClickListener(this);
-        buttonYes.setOnClickListener(this);
+        buttonNo.setOnClickListener (this);
+        buttonYes.setOnClickListener (this);
     }
 
     public Activity getActivity ()
     {
-        return getOwnerActivity();
+        return getOwnerActivity ();
     }
 
     @Override
-    public void onClick(View v)
+    public void onClick (View v)
     {
-        switch (v.getId())
+        switch (v.getId ())
         {
             case R.id.buttonNo:
-                dismiss();
+                dismiss ();
                 break;
             case R.id.buttonYes:
-                dismiss();
+                dismiss ();
                 getActivity().finish();
                 break;
         }

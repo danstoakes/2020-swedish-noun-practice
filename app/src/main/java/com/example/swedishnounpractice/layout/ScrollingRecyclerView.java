@@ -13,17 +13,13 @@ public class ScrollingRecyclerView extends RecyclerView
 {
     private int last;
 
-    private DisplayMetrics metrics;
-
     private ScrollingLayoutManager manager;
 
     private ScrollCompletedListener listener;
 
-    public ScrollingRecyclerView(Context context, AttributeSet attributeSet)
+    public ScrollingRecyclerView (Context context, AttributeSet attributeSet)
     {
-        super(context, attributeSet);
-
-        metrics = context.getResources().getDisplayMetrics();
+        super (context, attributeSet);
     }
 
     public void setScrollCompletedListener (ScrollCompletedListener listener)
@@ -59,21 +55,23 @@ public class ScrollingRecyclerView extends RecyclerView
     }
 
     @Override
-    public void onScrollStateChanged(int state)
+    public void onScrollStateChanged (int state)
     {
-        super.onScrollStateChanged(state);
+        super.onScrollStateChanged (state);
+
+        DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
 
         if (state == RecyclerView.SCROLL_STATE_IDLE)
         {
             if ((metrics.widthPixels - last) == 0)
             {
                 last = 0;
-                manager.setHorizontalScrollEnabled(false);
+                manager.setHorizontalScrollEnabled (false);
 
-                listener.onScrollCompleted();
+                listener.onScrollCompleted ();
             } else
             {
-                smoothScrollBy(metrics.widthPixels - last, 0);
+                smoothScrollBy (metrics.widthPixels - last, 0);
             }
         }
     }

@@ -8,8 +8,8 @@ public class Module implements DatabaseObject
 {
     private static final String TABLE_NAME = "Module";
 
-    private int percentageComplete;
     private int moduleID;
+    private int percentageComplete;
 
     private String referenceID;
     private String name;
@@ -38,14 +38,14 @@ public class Module implements DatabaseObject
         this.difficulty = difficulty;
     }
 
-    public int getPercentageComplete ()
-    {
-        return percentageComplete;
-    }
-
     public int getModuleID ()
     {
         return moduleID;
+    }
+
+    public int getPercentageComplete ()
+    {
+        return percentageComplete;
     }
 
     public String getReferenceID ()

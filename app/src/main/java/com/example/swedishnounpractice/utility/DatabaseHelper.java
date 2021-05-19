@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     private String databasePath;
 
-    public DatabaseHelper(Context context)
+    public DatabaseHelper (Context context)
     {
         super (context, DATABASE_NAME, null, DATABASE_VERSION);
 
@@ -92,7 +92,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         String [] parameters = new String [1];
         if (object instanceof Noun)
         {
-            parameters[0] = String.valueOf(((Noun) object).getModuleID());
+            parameters[0] = String.valueOf (((Noun) object).getModuleID ());
             ((Noun) object).setContext (context);
         }
 
@@ -106,12 +106,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
             {
                 if (object instanceof Module)
                 {
-                    toReturn.add(new Module (
+                    toReturn.add (new Module (
                             cursor.getInt (0), cursor.getString (1),
                             cursor.getString (2), cursor.getString (3)));
                 } else
                 {
-                    toReturn.add(new Noun (
+                    toReturn.add (new Noun (
                             cursor.getInt (0), cursor.getInt (1),
                             cursor.getString (2), cursor.getString (3),
                             cursor.getString (4), cursor.getDouble (5)));
@@ -144,28 +144,26 @@ public class DatabaseHelper extends SQLiteOpenHelper
     {
         String query = "SELECT COUNT(NounID) FROM Noun WHERE ModuleID = ? AND Seen >= ?";
 
-        SQLiteDatabase database = this.getReadableDatabase();
+        SQLiteDatabase database = this.getReadableDatabase ();
 
-        Cursor cursor = database.rawQuery(
-                query, new String [] {String.valueOf(module.getModuleID()), String.valueOf(range)});
+        Cursor cursor = database.rawQuery (
+                query, new String [] {String.valueOf (module.getModuleID ()), String.valueOf (range)});
 
-        if (cursor.moveToFirst())
+        if (cursor.moveToFirst ())
             return cursor.getInt (0);
 
-        cursor.close();
+        cursor.close ();
 
         return 0;
     }
 
-    public boolean update (DatabaseObject object)
+    public void update (DatabaseObject object)
     {
         SQLiteDatabase database = this.getWritableDatabase ();
-        int success = database.update(
+        database.update(
                 object.getTableName (), object.getUpdateValues (), object.getUpdateString (),
                 object.getUpdateParameters ());
 
         database.close ();
-
-        return success == 1;
     }
 }
